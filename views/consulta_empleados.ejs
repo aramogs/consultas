@@ -22,26 +22,6 @@
 </div>
 <% include ./static/footer %>
 <script>
-    $(document).ready(function () {
-
-        titulo = $('.csvTitulo').text()
-        $('#myTable').dataTable({
-            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-            dom: 'Blfrtip',
-            buttons: [
-                {
-                    extend: 'copyHtml5',
-                    title: titulo
-                },
-                {
-                    extend: 'csvHtml5',
-                    title: titulo
-                }
-            ]
-        });
-    });
-</script>
-<script>
 
     //Se crea la variable con la informaicon en JSON
     etiquetas_semi = <%-JSON.stringify(etiquetas_empleados) %>;
