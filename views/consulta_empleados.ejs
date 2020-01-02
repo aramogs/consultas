@@ -8,7 +8,7 @@
 <div class="col-xl-12 jumbotron jumbotron-fluid animated bounceInDown bg-transparent jumbotronBg">
     <div class="container">
         <img src="/img/TristoneLogo.png" class="img-logo rounded mx-auto d-block" alt="Tristone Flowtech">
-        <h1 class="display-4 text-center">Base de Datos Empleados</h1>
+        <h1 class="display-4 text-center csvTitulo">Base de Datos Empleados</h1>
         <p class="lead text-center">Empleados autorizados para utilizar los sistemas B10</p>
     </div>
 </div>
@@ -22,11 +22,31 @@
 </div>
 <% include ./static/footer %>
 <script>
+    $(document).ready(function () {
+
+        titulo = $('.csvTitulo').text()
+        $('#myTable').dataTable({
+            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+            dom: 'Blfrtip',
+            buttons: [
+                {
+                    extend: 'copyHtml5',
+                    title: titulo
+                },
+                {
+                    extend: 'csvHtml5',
+                    title: titulo
+                }
+            ]
+        });
+    });
+</script>
+<script>
 
     //Se crea la variable con la informaicon en JSON
-    etiquetas_semi = <%- JSON.stringify(etiquetas_empleados) %>;
+    etiquetas_semi = <% -JSON.stringify(etiquetas_empleados) %>;
 
-    // Se la variable con la informaicon se toman las llavez que seran los titiulos o headers de la table y se almacenan en col
+    // De la variable con la informaicon se toman las llaves que seran los titulos o headers de la tabla y se almacenan en col
     let col = [];
     for (let i = 0; i < etiquetas_semi.length; i++) {
         for (let key in etiquetas_semi[i]) {
@@ -48,7 +68,7 @@
         }
     }
 
-    // Se inserta la table en el id showData
+    // Se inserta la tabla en el id showData
     let divContainer = document.getElementById("showData");
     divContainer.innerHTML = "";
     divContainer.appendChild(table);
