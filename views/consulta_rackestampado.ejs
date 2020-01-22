@@ -21,11 +21,10 @@
     </div>
 </div>
 <% include ./static/footer %>
-
 <script>
 
     //Se crea la variable con la informaicon en JSON
-    etiquetas_semi = <%- JSON.stringify(etiquetas_semi) %>;
+    etiquetas_semi = <%- JSON.stringify(etiquetas_info) %>;
 
     // De la variable con la informaicon se toman las llaves que seran los titulos o headers de la tabla y se almacenan en col
     let col = [];

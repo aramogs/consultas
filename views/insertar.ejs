@@ -1,0 +1,141 @@
+<% include ./static/header %>
+<% include ./static/sidebar %>
+<% include ./static/navbar %>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-xl-12 jumbotron jumbotron-fluid animated bounceInDown  bg-transparent jumbotronBg">
+            <div class="container">
+                <img src="/img/TristoneLogo.png" class="img-logo rounded mx-auto d-block" alt="Tristone Flowtech">
+                <h1 class="display-4 text-center csvTitulo">Insertar en Base de Datos</h1>
+            </div>
+        </div>
+
+    </div>
+    <div class="card bg-light animated bounceInUp">
+        <div class=" card-header text-white animated text-center" id="errorText"></div>
+        <form action="/insertar" method="post">
+
+            <input type="text" name="base" id="base" value="<%=base%>" hidden>
+            <input type="text" name="tabla" id="tabla" value="<%=tabla%>" hidden>
+
+            <div class="card-body bg-white">
+                <table class="table  table-borderless">
+                    <tbody>
+
+                        <% values = Object.values(formato) %>
+
+                        <% for (let i = 0; i < values.length; i++) { %>
+
+
+                        <% let regExp = /\(([^)]+)\)/;%>
+                        <% let tipo = formato[i].Type %>
+                        <% tipo = tipo.split("(")[0] %>
+                        <tr>
+                            <td>
+                                <h5><%=(values[i].Field).toUpperCase()%></h5>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <% if(i<1){ %>
+                                    <input type="text" class="form-control" name="<%= values[i].Field %>"
+                                        id="<%= values[i].Field %>" readonly>
+                                    <% }else if(tipo == "varchar"){ %>
+                                        <% tamaño = regExp.exec(formato[i].Type)[1]%>
+                                        <% let n = "9".repeat(tamaño)%>
+                                    <input type="text" class="form-control" name="<%= values[i].Field %>"
+                                        id="<%= values[i].Field %>" maxlength="<%=tamaño%>" required>
+                                    <% }else if(tipo == "int") {%>
+                                    <input type="number" class="form-control" name="<%= values[i].Field %>"
+                                        id="<%= values[i].Field %>" min="0" max="<%=n%>" required>
+                                        <% }else{%>
+                                            <input type="text" class="form-control" readonly>
+                                        <% } %> 
+                                </div>
+                            </td>
+
+                        </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+  
+                <div>
+                    <button type="submit" class="btn btn-primary btn-block" id="btnGuardar" disabled>Guardar</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+
+    </tbody>
+    </table>
+</div>
+
+</div>
+
+<% include ./static/footer %>
+
+<script>
+
+
+
+    $("#no_sap").keyup(function () {
+        let prefix = "P"
+
+        if (this.value.indexOf(prefix) !== 0) {
+            this.value = prefix + this.value;
+        }
+
+        let xhr = new XMLHttpRequest();
+
+        xhr.open('GET', `/consulta_sap/<%=base%>`, true);
+
+        //console.log('READYSTATE: ', xhr.readyState);
+
+        xhr.onload = function () {
+            //console.log('READYSTATE: ', xhr.readyState);
+            if (this.status == 200) {
+                numerosSAP = JSON.parse(this.responseText) 
+                let existe = false              
+                for (let i = 0; i < numerosSAP.length; i++) {
+                       existe = false
+                       $('#errorText').removeClass('flipInX')
+                       $('#errorText').addClass('flipOutX')
+                       
+                       $('#errorText').html("Error SAP Duplicado")
+
+                       $('#btnGuardar').attr('disabled', false)
+                        
+                    if ($('#no_sap').val() == numerosSAP[i].no_sap) {
+
+                        $('#errorText').html("Error SAP Duplicado")
+                        $('#errorText').removeClass('flipOutX')
+                        $('#errorText').addClass('flipInX')
+                        $('#errorText').addClass('bg-danger')
+                        $('#btnGuardar').attr('disabled', true)
+                        existe = true
+                        break
+                    }
+                }
+
+
+                
+            } else if (this.status = 404) {
+                // document.getElementById('text').innerHTML = 'Not Found';
+            }
+        }
+
+        xhr.onerror = function () {
+            console.log('Request Error...');
+        }
+
+
+        xhr.send();
+
+    });
+
+
+
+</script>

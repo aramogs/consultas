@@ -1,0 +1,64 @@
+<% include ./static/header %>
+<% include ./static/sidebar %>
+<% include ./static/navbar %>
+
+
+<% if (estado == "insert") { %>
+    <% texto1 =  "Insercíon en"%>
+    <% texto2 =  "ID Insertado:"%>
+<%}else{ %>
+    <% texto1 = "Actualizacion de"%>
+    <% texto2 =  "ID Actualizado:"%>
+    <% } %>
+
+<div class="container">
+    <div class="row">
+        <div class="col-xl-12 jumbotron jumbotron-fluid animated bounceInDown  bg-transparent jumbotronBg">
+            <div class="container">
+                <img src="/img/TristoneLogo.png" class="img-logo rounded mx-auto d-block" alt="Tristone Flowtech">
+                <h1 class="display-4 text-center csvTitulo"><%=texto1%> Base de Datos</h1>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="card bg-light animated bounceInUp">
+        <div class="card-header text-white bg-success text-center text-capitalize">
+            <h5><%=texto2%> <%=id%></h5>
+        </div>
+        <div class="card-body bg-white">
+
+            <table class="table  table-borderless">
+                <tbody>
+                    <% for (let i = 0; i < arreglo.length; i++) { %>
+                    <tr>
+                        <td>
+                            <h5></h5>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <input type="text" class="form-control text-center" value="<%=arreglo[i]%>" readonly>
+                            </div>
+                        </td>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    </tbody>
+    </table>
+</div>
+
+</div>
+
+<% include ./static/footer %>
+
+<script type="text/javascript">
+    if (window.history.replaceState) {
+        window.history.replaceState(null, null, '/');
+
+    }
+</script>

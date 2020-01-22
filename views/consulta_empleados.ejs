@@ -22,9 +22,12 @@
 </div>
 <% include ./static/footer %>
 <script>
-
     //Se crea la variable con la informaicon en JSON
-    etiquetas_semi = <%-JSON.stringify(etiquetas_empleados) %>;
+    let etiquetas_semi = <%- JSON.stringify(etiquetas_empleados) %>;
+    console.log(etiquetas_semi);
+    
+    // Se crea una tabla
+    let table = document.createElement("table");
 
     // De la variable con la informaicon se toman las llaves que seran los titulos o headers de la tabla y se almacenan en col
     let col = [];
@@ -35,9 +38,6 @@
             }
         }
     }
-
-    // Se crea una tabla
-    let table = document.createElement("table");
 
     // Se llenan las filas de la tabla
     for (let i = 0; i < etiquetas_semi.length; i++) {
@@ -50,12 +50,11 @@
 
     // Se inserta la tabla en el id showData
     let divContainer = document.getElementById("showData");
-    divContainer.innerHTML = "";
     divContainer.appendChild(table);
 
     // Se le agrega el id para datatables
-    $("table").attr("id", "myTable").attr("class", "thead-dark").attr("class", "table-responsive");;
-
+    $("table").attr("id", "myTable").attr("class", "table-responsive");
+    $("table thead").attr("class","bg-dark")
     // Se crea el header y se agrega un tr
     table.createTHead()
     let thead = document.getElementsByTagName("thead")[0]
@@ -67,7 +66,6 @@
         th.innerHTML = col[i].toUpperCase();
         row.appendChild(th)
     }
-
 
 
 </script>

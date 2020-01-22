@@ -1,23 +1,12 @@
 const funcion = {};
-const express = require('express');
-
 
 const db = require('../db/conn_b10');
 const db_b = require('../db/conn_bartender');
 
 
-funcion.Discover_B10 = (callback)=>{
-    db.query(`SHOW COLUMNS FROM etiquetas_semi_consulta`, function (err, result, fields) {
-        if (err) {
-            callback(err, null);
-        } else {
-            callback(null, result);
-        }
-    })
-}
 
-funcion.Search_B10_etiquetas_semi =(callback)=>{
-    db.query(`SELECT * FROM etiquetas_semi_consulta`, function (err, result, fields) {
+funcion.Search_etiquetas_semi = (callback) => {
+    db.query(`SELECT * FROM etiquetas_semi_consulta WHERE 1`, function (err, result, fields) {
         if (err) {
             callback(err, null);
         } else {
@@ -27,8 +16,115 @@ funcion.Search_B10_etiquetas_semi =(callback)=>{
 }
 
 
-funcion.Search_B10_BMW =(callback)=>{
-    db.query(`SELECT * FROM b10sap`, function (err, result, fields) {
+funcion.Search_Tabla = (base,tabla,callback) => {
+    if (base == "b10") {
+        db.query(`SELECT * FROM ${tabla} WHERE 1`, function (err, result, fields) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, result);
+            }
+        })
+    } else {
+        db_b.query(`SELECT * FROM ${tabla} WHERE 1`, function (err, result, fields) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, result);
+            }
+        })
+    }
+}
+
+
+funcion.Search = (base, tabla, id, callback) => {
+    if (base == "b10") {
+        db.query(`SELECT * FROM ${tabla} WHERE id = ${id}`, function (err, result, fields) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, result);
+            }
+        })
+    } else {
+        db_b.query(`SELECT * FROM ${tabla} WHERE id = ${id}`, function (err, result, fields) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, result);
+            }
+        })
+    }
+}
+
+funcion.Discover_Search = (base, tabla, callback) => {
+    if (base == "b10") {
+        db.query(`SHOW COLUMNS FROM ${tabla} `, function (err, result, fields) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, result);
+            }
+        })
+    } else {
+        db_b.query(`SHOW COLUMNS FROM ${tabla} `, function (err, result, fields) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, result);
+            }
+        })
+    }
+
+}
+
+
+funcion.Update = (base, tabla, arreglo, id, callback) => {
+
+    if (base == "b10") {
+        db.query(`UPDATE ${tabla} SET ${arreglo} WHERE id = ${id} `, function (err, result, fields) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, result);
+            }
+        })
+    } else {
+        db_b.query(`UPDATE ${tabla} SET ${arreglo} WHERE id = ${id}`, function (err, result, fields) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, result);
+            }
+        })
+    }
+
+}
+
+funcion.Delete = (base, tabla, id, callback) => {
+
+    if (base == "b10") {
+        db.query(`DELETE FROM ${tabla} WHERE id = ${id} `, function (err, result, fields) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, result);
+            }
+        })
+    } else {
+        db_b.query(`DELETE FROM ${tabla} WHERE id = ${id}`, function (err, result, fields) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, result);
+            }
+        })
+    }
+
+}
+
+funcion.Search_Tables = (base,callback) => {
+    db.query(`SELECT table_name FROM information_schema.tables WHERE table_schema = '${base}'`, function (err, result, fields) {
         if (err) {
             callback(err, null);
         } else {
@@ -37,54 +133,60 @@ funcion.Search_B10_BMW =(callback)=>{
     })
 }
 
-funcion.Search_Empleados =(callback)=>{
-    db.query(`SELECT * FROM empleados`, function (err, result, fields) {
-        if (err) {
-            callback(err, null);
-        } else {
-            callback(null, result);
+funcion.Search_SAP_Union = (tables, base, callback) => {
+    search_field = "no_sap"
+    let search = []
+    for (let i = 0; i < tables.length; i++) {
+
+        search.push(`${search_field} FROM ${base}.${tables[i].table_name} UNION SELECT`)
+        if (i == tables.length - 1) {
+
+            search.push(`${search_field} FROM ${base}.${tables[i].table_name}`)
         }
-    })
+
+    }
+
+    if (base == "b10") {
+        db.query(`SELECT ${search_field} FROM b10sap   `, function (err, result, fields) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, result);
+            }
+        })
+        }else{
+            db_b.query(`SELECT ${search.join(" ")}   `, function (err, result, fields) {
+                if (err) {
+                    callback(err, null);
+                } else {
+                    callback(null, result);
+                }
+            })
+    }
 }
 
-funcion.Search_Ford =(callback)=>{
-    db_b.query(`SELECT * FROM ford`, function (err, result, fields) {
-        if (err) {
-            callback(err, null);
-        } else {
-            callback(null, result);
-        }
-    })
+
+funcion.Insert = (base, tabla, titulos,valores, callback) => {
+
+    if (base == "b10") {
+        db.query(`INSERT INTO ${tabla} (${titulos}) VALUES (${valores}) `, function (err, result, fields) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, result);
+            }
+        })
+    } else {
+        db_b.query(`INSERT INTO ${tabla} (${titulos}) VALUES (${valores}) `, function (err, result, fields) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, result);
+            }
+        })
+    }
+
 }
 
-funcion.Search_Gm =(callback)=>{
-    db_b.query(`SELECT * FROM gm`, function (err, result, fields) {
-        if (err) {
-            callback(err, null);
-        } else {
-            callback(null, result);
-        }
-    })
-}
-
-funcion.Search_VWMexico =(callback)=>{
-    db_b.query(`SELECT * FROM vwmexico`, function (err, result, fields) {
-        if (err) {
-            callback(err, null);
-        } else {
-            callback(null, result);
-        }
-    })
-}
-
-funcion.Search_Vulcanizado =(callback)=>{
-    db_b.query(`SELECT * FROM vulc_consulta`, function (err, result, fields) {
-        if (err) {
-            callback(err, null);
-        } else {
-            callback(null, result);
-        }
-    })
-}
 
 module.exports = funcion;

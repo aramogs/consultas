@@ -15,7 +15,19 @@ const routes = require('./routes/routes');
 
 
 
-app.use(bodyParser.urlencoded({limit: '50mb', extended: true, parameterLimit: 1000000}));
+app.use(bodyParser.urlencoded({ extended: true}));
+
+//Declarando y adquiriendo nodesspi e informacion de usuario
+app.use(function (req, res, next) {
+  var nodeSSPI = require('node-sspi')
+  var nodeSSPIObj = new nodeSSPI({
+    retrieveGroups: true
+  })
+  nodeSSPIObj.authenticate(req, res, function(err){
+    res.finished || next()
+  })
+})
+
 app.use(routes);
 
 app.set('port', process.env.PORT || 3010);

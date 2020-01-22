@@ -12,7 +12,14 @@ router.get('/consulta_ford', routesController.consulta_ford_GET);
 router.get('/consulta_gm', routesController.consulta_gm_GET);
 router.get('/consulta_vwmexico', routesController.consulta_vwmexico_GET);
 router.get('/consulta_vulcanizado', routesController.consulta_vulcanizado_GET);
+router.post('/actualizar',routesController.actualizar_POST);
+router.post('/guardar',routesController.guardar_POST);
+router.post('/eliminar',routesController.eliminar_POST);
+router.post('/agregar',routesController.agregar_POST);
+router.get('/consulta_sap/:id', routesController.consulta_sap_unico_GET);
+router.post('/insertar',routesController.insertar_POST);
+router.get('/consulta_vulca',routesController.consulta_vulca_GET);
 router.get('*', (req, res) => {
-  res.send('404 Page not found');
+  res.redirect('http://tftdelsrv001:3000/not_found');
 });
 module.exports = router;

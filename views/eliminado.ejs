@@ -1,0 +1,33 @@
+<% include ./static/header %>
+<% include ./static/sidebar %>
+<% include ./static/navbar %>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-xl-12 jumbotron jumbotron-fluid animated bounceInDown  bg-transparent jumbotronBg">
+            <div class="container">
+                <img src="/img/TristoneLogo.png" class="img-logo rounded mx-auto d-block" alt="Tristone Flowtech">
+                <h1 class="display-4 text-center csvTitulo">Eliminado Base de Datos</h1>
+            </div>
+        </div>
+    </div>
+    <div class="card bg-light animated bounceInUp">
+        <div class="card-header text-white bg-danger text-center text-capitalize">
+            <h5>ID: <%=id%> Eliminado </h5>
+        </div>
+    </div>
+    </tbody>
+    </table>
+</div>
+
+</div>
+
+<% include ./static/footer %>
+
+<script type="text/javascript">
+    if (window.history.replaceState) {
+        window.history.replaceState(null, null, '/');
+
+    }
+</script>
