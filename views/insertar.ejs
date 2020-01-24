@@ -42,16 +42,17 @@
                                     <input type="text" class="form-control" name="<%= values[i].Field %>"
                                         id="<%= values[i].Field %>" readonly>
                                     <% }else if(tipo == "varchar"){ %>
-                                        <% tamaño = regExp.exec(formato[i].Type)[1]%>
-                                        <% let n = "9".repeat(tamaño)%>
+                                    <% tamaño = regExp.exec(formato[i].Type)[1]%>
+                                    <% let n = "9".repeat(tamaño)%>
                                     <input type="text" class="form-control" name="<%= values[i].Field %>"
                                         id="<%= values[i].Field %>" maxlength="<%=tamaño%>" required>
                                     <% }else if(tipo == "int") {%>
+                                        <% let n = "9".repeat(tamaño)%>
                                     <input type="number" class="form-control" name="<%= values[i].Field %>"
                                         id="<%= values[i].Field %>" min="0" max="<%=n%>" required>
-                                        <% }else{%>
-                                            <input type="text" class="form-control" readonly>
-                                        <% } %> 
+                                    <% }else{%>
+                                    <input type="text" class="form-control" readonly>
+                                    <% } %>
                                 </div>
                             </td>
 
@@ -59,7 +60,7 @@
                         <% } %>
                     </tbody>
                 </table>
-  
+
                 <div>
                     <button type="submit" class="btn btn-primary btn-block" id="btnGuardar" disabled>Guardar</button>
                 </div>
@@ -79,62 +80,118 @@
 
 <script>
 
+    function findId() {
+        let currentId
+        if ($('#no_sap').length == '1') {
+            $('#no_sap').keyup(function () {
+                let prefix = "P"
+
+                if (this.value.indexOf(prefix) !== 0) {
+                    this.value = prefix + this.value;
+                }
+
+                let xhr = new XMLHttpRequest();
+
+                xhr.open('GET', `/consulta_sap_duplicado/<%=base%>`, true);
+
+                //console.log('READYSTATE: ', xhr.readyState);
+
+                xhr.onload = function () {
+                    //console.log('READYSTATE: ', xhr.readyState);
+                    if (this.status == 200) {
+                        valoresUnicos = JSON.parse(this.responseText)
+                        let existe = false
+                        for (let i = 0; i < valoresUnicos.length; i++) {
+                            existe = false
+                            $('#errorText').removeClass('flipInX')
+                            $('#errorText').addClass('flipOutX')
+
+                            $('#errorText').html("Error Valor Duplicado")
+
+                            $('#btnGuardar').attr('disabled', false)
+
+                            if ($('#no_sap').val() == valoresUnicos[i].no_sap) {
+
+                                $('#errorText').html("Error Valor Duplicado")
+                                $('#errorText').removeClass('flipOutX')
+                                $('#errorText').addClass('flipInX')
+                                $('#errorText').addClass('bg-danger')
+                                $('#btnGuardar').attr('disabled', true)
+                                existe = true
+                                break
+                            }
+                        }
 
 
-    $("#no_sap").keyup(function () {
-        let prefix = "P"
 
-        if (this.value.indexOf(prefix) !== 0) {
-            this.value = prefix + this.value;
-        }
-
-        let xhr = new XMLHttpRequest();
-
-        xhr.open('GET', `/consulta_sap/<%=base%>`, true);
-
-        //console.log('READYSTATE: ', xhr.readyState);
-
-        xhr.onload = function () {
-            //console.log('READYSTATE: ', xhr.readyState);
-            if (this.status == 200) {
-                numerosSAP = JSON.parse(this.responseText) 
-                let existe = false              
-                for (let i = 0; i < numerosSAP.length; i++) {
-                       existe = false
-                       $('#errorText').removeClass('flipInX')
-                       $('#errorText').addClass('flipOutX')
-                       
-                       $('#errorText').html("Error SAP Duplicado")
-
-                       $('#btnGuardar').attr('disabled', false)
-                        
-                    if ($('#no_sap').val() == numerosSAP[i].no_sap) {
-
-                        $('#errorText').html("Error SAP Duplicado")
-                        $('#errorText').removeClass('flipOutX')
-                        $('#errorText').addClass('flipInX')
-                        $('#errorText').addClass('bg-danger')
-                        $('#btnGuardar').attr('disabled', true)
-                        existe = true
-                        break
+                    } else if (this.status = 404) {
+                        // document.getElementById('text').innerHTML = 'Not Found';
                     }
                 }
 
+                xhr.onerror = function () {
+                    console.log('Request Error...');
+                }
 
-                
-            } else if (this.status = 404) {
-                // document.getElementById('text').innerHTML = 'Not Found';
-            }
+
+                xhr.send();
+
+            });
+        } else if ($('#emp_tag').length == 1) {
+
+            $('#emp_tag').keyup(function () {
+
+                let xhr = new XMLHttpRequest();
+
+                xhr.open('GET', `/consulta_emp_duplicado/<%=base%>`, true);
+
+                xhr.onload = function () {
+                    if (this.status == 200) {
+                        valoresUnicos = JSON.parse(this.responseText)
+                 
+                        
+                        let existe = false
+                        for (let i = 0; i < valoresUnicos.length; i++) {
+                            existe = false
+                            $('#errorText').removeClass('flipInX')
+                            $('#errorText').addClass('flipOutX')
+
+                            $('#errorText').html("Error Valor Duplicado")
+
+                            $('#btnGuardar').attr('disabled', false)
+
+                            if ($('#emp_tag').val() == valoresUnicos[i].emp_tag) {
+
+                                $('#errorText').html("Error Valor Duplicado")
+                                $('#errorText').removeClass('flipOutX')
+                                $('#errorText').addClass('flipInX')
+                                $('#errorText').addClass('bg-danger')
+                                $('#btnGuardar').attr('disabled', true)
+                                existe = true
+                                break
+                            }
+                        }
+
+
+
+                    } else if (this.status = 404) {
+                        // document.getElementById('text').innerHTML = 'Not Found';
+                    }
+                }
+
+                xhr.onerror = function () {
+                    console.log('Request Error...');
+                }
+
+
+                xhr.send();
+
+            });
         }
+        return currentId
+    }
+    findId()
 
-        xhr.onerror = function () {
-            console.log('Request Error...');
-        }
-
-
-        xhr.send();
-
-    });
 
 
 

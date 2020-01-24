@@ -16,7 +16,8 @@ router.post('/actualizar',routesController.actualizar_POST);
 router.post('/guardar',routesController.guardar_POST);
 router.post('/eliminar',routesController.eliminar_POST);
 router.post('/agregar',routesController.agregar_POST);
-router.get('/consulta_sap/:id', routesController.consulta_sap_unico_GET);
+router.get('/consulta_sap_duplicado/:id', routesController.consulta_valor_unico_GET);
+router.get('/consulta_emp_duplicado/:id', routesController.consulta_valor_unico_GET);
 router.post('/insertar',routesController.insertar_POST);
 router.get('/consulta_vulca',routesController.consulta_vulca_GET);
 router.get('*', (req, res) => {

@@ -16,7 +16,7 @@ funcion.Search_etiquetas_semi = (callback) => {
 }
 
 
-funcion.Search_Tabla = (base,tabla,callback) => {
+funcion.Search_Tabla = (base, tabla, callback) => {
     if (base == "b10") {
         db.query(`SELECT * FROM ${tabla} WHERE 1`, function (err, result, fields) {
             if (err) {
@@ -123,7 +123,7 @@ funcion.Delete = (base, tabla, id, callback) => {
 
 }
 
-funcion.Search_Tables = (base,callback) => {
+funcion.Search_Tables = (base, callback) => {
     db.query(`SELECT table_name FROM information_schema.tables WHERE table_schema = '${base}'`, function (err, result, fields) {
         if (err) {
             callback(err, null);
@@ -133,8 +133,8 @@ funcion.Search_Tables = (base,callback) => {
     })
 }
 
-funcion.Search_SAP_Union = (tables, base, callback) => {
-    search_field = "no_sap"
+funcion.Search_SAP_Union = (tables, base, search_field, callback) => {
+
     let search = []
     for (let i = 0; i < tables.length; i++) {
 
@@ -146,7 +146,7 @@ funcion.Search_SAP_Union = (tables, base, callback) => {
 
     }
 
-    if (base == "b10") {
+    if (base == "b10" && search_field == "no_sap") {
         db.query(`SELECT ${search_field} FROM b10sap   `, function (err, result, fields) {
             if (err) {
                 callback(err, null);
@@ -154,19 +154,27 @@ funcion.Search_SAP_Union = (tables, base, callback) => {
                 callback(null, result);
             }
         })
-        }else{
-            db_b.query(`SELECT ${search.join(" ")}   `, function (err, result, fields) {
-                if (err) {
-                    callback(err, null);
-                } else {
-                    callback(null, result);
-                }
-            })
+    } else if (base == "b10" && search_field == "emp_tag") {
+        db.query(`SELECT ${search_field} FROM empleados   `, function (err, result, fields) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, result);
+            }
+        })
+    } else {
+        db_b.query(`SELECT ${search.join(" ")}   `, function (err, result, fields) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, result);
+            }
+        })
     }
 }
 
 
-funcion.Insert = (base, tabla, titulos,valores, callback) => {
+funcion.Insert = (base, tabla, titulos, valores, callback) => {
 
     if (base == "b10") {
         db.query(`INSERT INTO ${tabla} (${titulos}) VALUES (${valores}) `, function (err, result, fields) {

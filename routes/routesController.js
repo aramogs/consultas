@@ -3,7 +3,6 @@ const controller = {};
 
 //Require Funciones
 const funcion = require('../public/js/controllerFunctions');
-const funcionE = require('../public/js/empleadosFunctions');
 
 // Index GET
 controller.index_GET = (req, res) => {
@@ -11,8 +10,11 @@ controller.index_GET = (req, res) => {
 
 };
 
+
 function acceso(req) {
     let acceso
+  
+    
     for (let i = 0; i < req.connection.userGroups.length; i++) {
         if (req.connection.userGroups[i].toString() == 'TFT\\TFT.DEL.PAGES_Consultas_Logistica') {
             acceso = "logistica"
@@ -20,9 +22,10 @@ function acceso(req) {
             acceso = "produccion"
         }
     }
+
+    
     return (acceso)
 }
-
 
 controller.consulta_rackestampado_GET = (req, res) => {
 
@@ -226,12 +229,21 @@ controller.agregar_POST = (req, res) => {
         res.render("acceso_denegado.ejs")
     }
 }
-controller.consulta_sap_unico_GET = (req, res) => {
+controller.consulta_valor_unico_GET = (req, res) => {
 
+    
+    if (req.url.split("/")[1] == "consulta_sap_duplicado") {
+        search_field = "no_sap"
+    }else if (req.url.split("/")[1] == "consulta_emp_duplicado") {
+        search_field = "emp_tag"
+    }
+
+    
     base = req.params.id;
     funcion.Search_Tables(base, (err, tables) => {
-        funcion.Search_SAP_Union(tables, base, (err, numerosSAP) => {
-            res.send(numerosSAP);
+        
+        funcion.Search_SAP_Union(tables, base,search_field, (err, valoresUnicos) => {            
+            res.send(valoresUnicos);
         });
     });
 };
