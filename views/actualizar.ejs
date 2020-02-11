@@ -47,6 +47,8 @@
                                         <% let n = "9".repeat(tamaño)%>
                                     <input type="text" class="form-control" name="<%= keys[i] %>" id="<%= keys[i] %>"value="<%=(values[i])%>" maxlength="<%=tamaño%>">
                                     <% }else if(tipo == "int") {%>
+                                        <% tamaño = regExp.exec(formato[i].Type)[1]%>
+                                        <% let n = "9".repeat(tamaño)%>
                                     <input type="number" class="form-control"name="<%= keys[i] %>" id="<%= keys[i] %>"value="<%=(values[i])%>" min="0" max="<%=n%>">
                                     <% }else{%>
                                         <input type="text" class="form-control" readonly>
