@@ -29,6 +29,12 @@
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.13.0",
+    "cz-conventional-changelog": "^3.1.0",
     "nodemon": "^1.19.2"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
