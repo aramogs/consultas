@@ -1,7 +1,7 @@
 {
   "name": "consultas",
   "version": "1.0.0",
-  "description": "",
+  "description": "Lector de codigos DataMatrix con condiciones para inentariar",
   "main": "la.js",
   "scripts": {
     "start": "nodemon co",
@@ -16,7 +16,7 @@
     "bootstrap": "^4.3.1",
     "bootstrap-datetimepicker": "0.0.7",
     "datatables": "^1.10.18",
-    "ejs": "^2.7.1",
+    "ejs": "^3.0.1",
     "express": "^4.17.1",
     "express-mailer": "^0.3.1",
     "jquery": "^3.4.1",
@@ -30,7 +30,7 @@
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.13.0",
     "cz-conventional-changelog": "^3.1.0",
-    "nodemon": "^1.19.2"
+    "nodemon": "^2.0.2"
   },
   "config": {
     "commitizen": {
