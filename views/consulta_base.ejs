@@ -1,9 +1,13 @@
-<% include ./static/header %>
-<% include ./static/sidebar %>
-<% include ./static/navbar %>
+<%- include ("./static/header") %>
+<%- include ("./static/sidebar") %>
+<%- include ("./static/navbar") %>
 
-
-
+<script>
+let req = new XMLHttpRequest();
+req.open('GET', document.location, false);
+req.send(null);
+let origen = req.responseURL
+</script>
 
 <div class="col-xl-12 jumbotron jumbotron-fluid animated bounceInDown bg-transparent jumbotronBg">
     <div class="container">
@@ -16,10 +20,10 @@
     <div class="card bg-light  ">
         <div class=" card-header text-white bg-secondary ">
             <form method="post">
-                <div class="row">
+                <div class="row" id="row_">
 
                     <div class="col-lg-2">
-                        <button type="submit" formaction="/agregar" class="btn btn-success  rounded-pill" name="id"
+                        <button type="submit" formaction="/agregar" class="btn btn-success  rounded-pill" name="id" 
                             value="<%= base %>,<%= tabla %>"><span class="fas fa-plus"> Insertar
                     </div>
                     <div class="col-lg-8 text-center"><%= tabla.toUpperCase() %></div>
@@ -34,10 +38,22 @@
     </div>
 </div>
 
-<% include ./static/footer %>
+<%- include ("./static/footer") %>
 
 <script>
-    
+let el = document.createElement("input");
+el.value = origen
+el.id = "origen_insert"
+el.name = "origen"
+el.setAttribute("hidden", true)
+el.setAttribute("value", origen)
+//el.style.visibility = "hidden";
+
+let form = document.getElementById("row_");
+form.appendChild(el);
+
+
+
     //Se crea la variable con la informaicon en JSON
     etiquetas_semi = <%- JSON.stringify(etiquetas_info) %>;
 
@@ -54,6 +70,9 @@
     // Se crea una tabla
     let table = document.createElement("table");
 
+ 
+   
+
     // Se llenan las filas de la tabla
     for (let i = 0; i < etiquetas_semi.length; i++) {
         tr = table.insertRow(-1);
@@ -61,9 +80,9 @@
             let tabCell = tr.insertCell(-1);
             tabCell.innerHTML = etiquetas_semi[i][col[j]];
 
-            
+
             let firstCol = table.rows[i].cells[0]; //first column
-            firstCol.innerHTML = ` <button type="submit" formaction="/actualizar" class="btn btn-info  rounded-pill"
+            firstCol.innerHTML = `<input type="text" name="origen" value=${origen} hidden> <p hidden>${etiquetas_semi[i][col[0]]}</p><button type="submit" formaction="/actualizar" class="btn btn-info  rounded-pill"
                                         name="id" value="${etiquetas_semi[i][col[0]]},<%=base%>,<%=tabla%>"><span
                                             class="fas fa-pencil-alt">
                                             <button type="submit" formaction="/eliminar"

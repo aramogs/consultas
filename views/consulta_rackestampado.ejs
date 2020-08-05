@@ -1,6 +1,6 @@
-<% include ./static/header %>
-<% include ./static/sidebar %>
-<% include ./static/navbar %>
+<%- include ("./static/header") %>
+<%- include ("./static/sidebar") %>
+<%- include ("./static/navbar") %>
 
 
 <!-- <input type="button" onclick="CreateTableFromJSON()" value="Create Table From JSON" /> -->
@@ -20,7 +20,7 @@
         </div>
     </div>
 </div>
-<% include ./static/footer %>
+<%- include ("./static/footer") %>
 <script>
 
     //Se crea la variable con la informaicon en JSON

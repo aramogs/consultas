@@ -1,11 +1,11 @@
-<% include ./static/header %>
-<% include ./static/sidebar %>
-<% include ./static/navbar %>
+<%- include ("./static/header") %>
+<%- include ("./static/sidebar") %>
+<%- include ("./static/navbar") %>
 
 
 <div class="container">
     <div class="row">
-        <div class="col-xl-12 jumbotron jumbotron-fluid animated bounceInDown  bg-transparent jumbotronBg">
+        <div class="col-lx-12 jumbotron jumbotron-fluid animated bounceInDown  bg-transparent jumbotronBg">
             <div class="container">
                 <img src="/img/TristoneLogo.png" class="img-logo rounded mx-auto d-block" alt="Tristone Flowtech">
                 <h1 class="display-4 text-center csvTitulo">Eliminado Base de Datos</h1>
@@ -13,9 +13,19 @@
         </div>
     </div>
     <div class="card bg-light animated bounceInUp">
-        <div class="card-header text-white bg-danger text-center text-capitalize">
-            <h5>ID: <%=id%> Eliminado </h5>
-        </div>
+        
+                <div class="card-header text-white bg-danger text-center text-capitalize">
+                    <div class="row">
+                        <div class="col-lg-1">
+                            <form action="<%=origen%>" method="GET">
+                                <button type="submit" class="btn btn-warning btn-block animated infinite heartBeat" ><span class="fas fa-chevron-left "></span></button>
+                            </form>
+                        </div>
+                        <div class="col-lg-10">
+                            <h5>ID: <%=id%> Eliminado </h5>
+                        </div>
+                    </div>  
+                </div>
     </div>
     </tbody>
     </table>
@@ -23,7 +33,7 @@
 
 </div>
 
-<% include ./static/footer %>
+<%- include ("./static/footer")%>
 
 <script type="text/javascript">
     if (window.history.replaceState) {

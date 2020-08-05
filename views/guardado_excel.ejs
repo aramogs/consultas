@@ -1,0 +1,127 @@
+<%- include ("./static/header")%>
+<%- include ("./static/sidebar") %>
+<%- include ("./static/navbar")%>
+
+<% if (estado == "OK") { %>
+<% texto1 =  "Insercíon en"%>
+<% texto2 =  "Base Actualizada"%>
+<% texto3 =  "showData"%>
+<% alert =  "alert-success"%>
+<% getBack =  "hidden"%>
+<%}else{ %>
+<% texto1 = "Error al insertar en"%>
+<% texto2 =  "Error : "%>
+<% texto3 =  ""%>
+<% alert =  "alert-danger"%>
+<% getBack =  ""%>
+<% } %>
+
+<div class="container">
+    
+    <div class="row">
+        <div class="col-xl-12 jumbotron jumbotron-fluid animated bounceInDown  bg-transparent jumbotronBg">    
+            <div class="container">
+                <img src="/img/TristoneLogo.png" class="img-logo rounded mx-auto d-block" alt="Tristone Flowtech">
+                <h1 class="display-4 text-center csvTitulo"><%=texto1%> Base de Datos</h1>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container-fluid animated bounceInUp">
+        <div class="card bg-light  ">
+            <div class=" card-header text-white bg-secondary ">
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <%= id[1].toUpperCase() %>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-1">
+                        <form action="/agregar" method="POST">
+                            <input type="text" name="id" value="<%=[id[0],id[1]]%>" hidden>
+                            <button type="submit"  class="btn btn-warning btn-block animated infinite heartBeat" <%=getBack%>><span class="fas fa-chevron-left "  ></span></button>
+                        </form>
+                    </div>
+                    <div class="col-10">
+                        <div class="alert <%=alert%>  text-center" role="alert">
+                            <%=texto2%> <%=mensaje%>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+
+                <div class="container-fluid table-responsive">
+                    <form id="<%=texto3%>" method="post" class="text-center"></form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    </tbody>
+    </table>
+</div>
+
+</div>
+<%- include ("./static/footer")%>
+
+<script type="text/javascript">
+    
+    // if (window.history.replaceState) {
+    //     window.history.replaceState(null, null, '/');
+
+    // }
+
+    //Se crea la variable con la informaicon en JSON
+    result = <%- JSON.stringify(arreglo) %>;
+    // De la variable con la informaicon se toman las llaves que seran los titulos o headers de la tabla y se almacenan en col
+    let headers = [];
+    let col = [];
+    for (let i = 0; i < result[0].length; i++) {
+        headers.push(result[0][i])
+
+    }
+
+    for (let i = 0; i < result.length; i++) {
+        for (let key in result[i]) {
+            if (col.indexOf(key) === -1) {
+                col.push(key);
+            }
+        }
+    }
+    // Se crea una tabla
+    let table = document.createElement("table");
+
+    // Se llenan las filas de la tabla
+    for (let i = 1; i < result.length; i++) {
+        tr = table.insertRow(-1);
+        for (let j = 0; j < col.length; j++) {
+            let tabCell = tr.insertCell(-1);
+            tabCell.innerHTML = result[i][col[j]];
+
+        }
+    }
+    // Se inserta la tabla en el id showData
+    let divContainer = document.getElementById("showData");
+    divContainer.innerHTML = "";
+    divContainer.appendChild(table);
+
+    // Se le agrega el id para datatables
+    $("table").attr("id", "myTable").addClass("thead-dark table table-sm");;
+
+
+    // Se crea el header y se agrega un tr
+    table.createTHead()
+    let thead = document.getElementsByTagName("thead")[0]
+    let row = thead.insertRow()
+
+    //Por cada th en thead este se agrega a row
+    for (let i = 0; i < col.length; i++) {
+        let th = document.createElement("th");
+        th.innerHTML = headers[i];
+        row.appendChild(th)
+    }
+
+</script>

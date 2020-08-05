@@ -4,6 +4,9 @@ const controller = {};
 //Require Funciones
 const funcion = require('../public/js/controllerFunctions');
 
+
+//Require ExcelJs
+const Excel = require('exceljs');
 // Index GET
 controller.index_GET = (req, res) => {
     res.render('index.ejs');
@@ -13,18 +16,17 @@ controller.index_GET = (req, res) => {
 //Prueba Commitizen
 
 function acceso(req) {
-    let acceso
-  
-    
+    let acceso = []
+
+       
+
     for (let i = 0; i < req.connection.userGroups.length; i++) {
         if (req.connection.userGroups[i].toString() == 'TFT\\TFT.DEL.PAGES_Consultas_Logistica') {
-            acceso = "logistica"
+            acceso.push("logistica")
         } else if (req.connection.userGroups[i].toString() == 'TFT\\TFT.DEL.PAGES_Consultas_Produccion') {
-            acceso = "produccion"
+            acceso.push("produccion")
         }
     }
-
-    
     return (acceso)
 }
 
@@ -125,14 +127,9 @@ controller.actualizar_POST = (req, res) => {
     id = ids[0];
     base = ids[1];
     tabla = ids[2];
+    origen = req.body.origen[0]
 
-
-
-    if (acceso(req, res) == "logistica" && tabla != "vulc_consulta" || acceso(req, res) == "produccion" && tabla == "vulc_consulta") {
-        if (tabla == "vulc_consulta") {
-            tabla = "vulc";
-        }
-
+    if ((acceso(req,res)).includes("logistica") && tabla != "vulc_consulta" || (acceso(req,res)).includes("produccion") && tabla == "vulc_consulta") {
 
         funcion.Search(base, tabla, id, (err, valores) => {
             funcion.Discover_Search(base, tabla, (err, formato) => {
@@ -140,7 +137,8 @@ controller.actualizar_POST = (req, res) => {
                     valores,
                     formato,
                     base,
-                    tabla
+                    tabla,
+                    origen
                 });
             });
         });
@@ -154,12 +152,11 @@ controller.actualizar_POST = (req, res) => {
 controller.guardar_POST = (req, res) => {
 
     let obj = req.body;
-
     base = req.body.base;
     tabla = req.body.tabla;
     id = req.body.id;
     arreglo = [];
-
+    origen = req.body.origen
     funcion.Discover_Search(base, tabla, (err, formato) => {
 
         let info = Object.entries(obj);
@@ -176,12 +173,12 @@ controller.guardar_POST = (req, res) => {
             }
         }
         arregloFinal = arreglo.join();
-
         funcion.Update(base, tabla, arregloFinal, id, (err, result) => {
             res.render('guardado.ejs', {
                 arreglo,
                 id,
-                estado: "update"
+                estado: "update",
+                origen
             });
         });
     });
@@ -194,11 +191,13 @@ controller.eliminar_POST = (req, res) => {
     id = ids[0];
     base = ids[1];
     tabla = ids[2];
+    let origen =req.body.origen[0]
 
-    if (acceso(req, res) == "logistica" && tabla != "vulc_consulta" || acceso(req, res) == "produccion" && tabla == "vulc_consulta") {
+    if ((acceso(req,res)).includes("logistica") && tabla != "vulc_consulta" || (acceso(req,res)).includes("produccion") && tabla == "vulc_consulta") {
         funcion.Delete(base, tabla, id, (err, result) => {
             res.render('eliminado.ejs', {
-                id
+                id,
+                origen
             });
         });
     } else {
@@ -208,11 +207,12 @@ controller.eliminar_POST = (req, res) => {
 
 
 controller.agregar_POST = (req, res) => {
+
     ids = (req.body.id).split(",");
     base = ids[0];
     tabla = ids[1];
 
-    if (acceso(req, res) == "logistica" && tabla != "vulc_consulta" || acceso(req, res) == "produccion" && tabla == "vulc_consulta") {
+    if ((acceso(req,res)).includes("logistica") && tabla != "vulc_consulta" || (acceso(req,res)).includes("produccion") && tabla == "vulc_consulta") {
 
         if (tabla == "vulc_consulta") {
             tabla = "vulc";
@@ -230,20 +230,21 @@ controller.agregar_POST = (req, res) => {
         res.render("acceso_denegado.ejs")
     }
 }
+
 controller.consulta_valor_unico_GET = (req, res) => {
 
-    
+
     if (req.url.split("/")[1] == "consulta_sap_duplicado") {
         search_field = "no_sap"
-    }else if (req.url.split("/")[1] == "consulta_emp_duplicado") {
+    } else if (req.url.split("/")[1] == "consulta_emp_duplicado") {
         search_field = "emp_tag"
     }
 
-    
+
     base = req.params.id;
     funcion.Search_Tables(base, (err, tables) => {
-        
-        funcion.Search_SAP_Union(tables, base,search_field, (err, valoresUnicos) => {            
+
+        funcion.Search_SAP_Union(tables, base, search_field, (err, valoresUnicos) => {
             res.send(valoresUnicos);
         });
     });
@@ -252,20 +253,16 @@ controller.consulta_valor_unico_GET = (req, res) => {
 controller.insertar_POST = (req, res) => {
     obj = req.body;
     base = req.body.base;
-
-
-
     tabla = req.body.tabla;
-
-
+    origen = req.body.origen
     arreglo = [];
     titulos = [];
     valores = [];
+
+
     funcion.Discover_Search(base, tabla, (err, formato) => {
-        console.log(tabla);
 
         let info = Object.entries(obj);
-
         for (let i = 1; i < formato.length; i++) {
             for (let y = 0; y < info.length; y++) {
                 if (formato[i].Field == info[y][0]) {
@@ -285,18 +282,128 @@ controller.insertar_POST = (req, res) => {
 
         titulosFinales = titulos.join();
         valoresFinales = valores.join();
-
         funcion.Insert(base, tabla, titulosFinales, valoresFinales, (err, result) => {
             id = result.insertId;
 
             res.render('guardado.ejs', {
                 arreglo,
                 id,
-                estado: "insert"
+                estado: "insert",
+                origen
             });
         });
     });
 };
+
+
+controller.insertar_excel_POST = (req, res) => {
+
+    let obj = req.body;
+    let base = req.body.base;
+    let tabla = req.body.tabla;
+
+
+    let arreglo = [];
+    let titulos = [];
+    let titulos2 = [];
+    let valores = [];
+    let no_sap = [];
+    let no_sap2;
+    let count = 0;
+    const wb = new Excel.Workbook();
+
+    funcion.Discover_Search(base, tabla, (err, formato) => {
+
+        wb.xlsx.load(req.file.buffer)
+            .then(() => {
+                worksheet = wb.worksheets[0]
+                worksheet.eachRow(function (row, rowNumber) {
+                    val = row.values
+                    for (let i = 0; i < val.length; i++) {
+                        if (val[i] === undefined) {
+                            val[i] = " "
+                        }
+
+                    }
+                    arreglo.push(val)
+                });
+            })
+            .then(() => {
+                for (let i = 0; i < arreglo.length; i++) {
+                    arreglo[i].shift()
+                }
+                for (let i = 0; i < arreglo[0].length; i++) {
+                    titulos.push(`\`${arreglo[0][i]}\``)
+                    titulos2.push((arreglo[0][i]).toLowerCase())
+                }
+            })
+            .then(() => {
+                    if (formato.length == titulos2.length) {
+                        for (let i = 0; i < titulos2.length; i++) {
+
+                            if (titulos2.includes(formato[i].Field)) {count++}
+                        }
+
+                        if (formato.length != count) {
+                            res.render('guardado_excel.ejs', {
+                                arreglo,
+                                estado: "Error",
+                                mensaje: "Titulos del documento no coinciden con la base de datos",
+                                id:[base,tabla]
+                            });
+                        } else {
+
+                            for (let i = 0; i < titulos2.length; i++) {
+                                if (titulos2[i] == "no_sap") { 
+                                    no_sap2 = i 
+                                }
+                            }
+                            for (let i = 0; i < arreglo.length; i++) {
+                                no_sap.push((arreglo[i][no_sap2]).toUpperCase())
+                            }
+                            let unique = [...new Set(no_sap)];
+                            for (let i = 1; i < arreglo.length; i++) {
+
+                                if ((arreglo[i][no_sap2]).toUpperCase().startsWith("P")) {
+                                    valores.push(arreglo[i])
+                                }else{
+                                    arreglo[i][no_sap2] = "P"+arreglo[i][no_sap2]
+                                    valores.push(arreglo[i])
+                                    
+                                }
+
+                                
+                            }
+
+                            if (no_sap.length != unique.length) {
+                                res.render('guardado_excel.ejs', {
+                                    arreglo,
+                                    estado: "Error",
+                                    mensaje: "Numero de SAP duplicado verifique su informacion",
+                                    id:[base,tabla]
+                                });
+                            }else{
+                                funcion.Insert_excel(base, tabla, titulos, valores, (err, result) => { })
+                                res.render('guardado_excel.ejs', {
+                                    arreglo,
+                                    estado: "OK",
+                                    mensaje: "",
+                                    id:[base,tabla]
+                                });
+                            }
+
+                        }
+                    } else {
+                        res.render('guardado_excel.ejs', {
+                            arreglo,
+                            estado: "Error",
+                            mensaje: "Columnas del documento no coinciden con la base de datos",
+                            id:[base,tabla]
+                        });
+                    }
+            })
+    })
+}
 
 controller.consulta_vulca_GET = (req, res) => {
     funcion.Search_etiquetas_semi((err, base) => {

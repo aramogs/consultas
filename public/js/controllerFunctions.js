@@ -58,6 +58,9 @@ funcion.Search = (base, tabla, id, callback) => {
 }
 
 funcion.Discover_Search = (base, tabla, callback) => {
+    if (tabla === "vulc") {
+        tabla = "vulc_consulta"
+    }
     if (base == "b10") {
         db.query(`SHOW COLUMNS FROM ${tabla} `, function (err, result, fields) {
             if (err) {
@@ -196,5 +199,48 @@ funcion.Insert = (base, tabla, titulos, valores, callback) => {
 
 }
 
+
+funcion.Insert_excel = (base, tabla, titulos, valores, callback) => {
+
+    let valor
+    let = valores_finales = []
+    let duplicate = []
+
+    for (let i = 0; i < valores.length; i++) {
+        valores_finales = []
+        duplicate = []
+        for (let y = 0; y < titulos.length; y++) {
+
+            if (typeof (valores[i][y]) === "string") {
+                valor = `"${valores[i][y]}"`
+            } else if (typeof (valores[i][y])) {
+                valor = valores[i][y]
+            } else if (valores[i][y] === undefined) {
+                valor = " "
+            } else {
+                valor = valores[i][y]
+            }
+            valores_finales.push(valor)
+            duplicate.push(`${titulos[y]}=${valor}`)
+        }  
+        if (base == "b10") {
+            db.query(`INSERT INTO ${tabla} (${titulos.join()}) VALUES (${valores_finales}) ON DUPLICATE KEY UPDATE ${duplicate}  `, function (err, result, fields) {
+                if (err) {
+                    callback(err, null);
+                } else {
+                    callback(null, result);
+                }
+            })
+        } else {
+            db_b.query(`INSERT INTO ${tabla} (${titulos.join()}) VALUES (${valores_finales}) ON DUPLICATE KEY UPDATE ${duplicate}  `, function (err, result, fields) {
+                if (err) {
+                    callback(err, null);
+                } else {
+                    callback(null, result);
+                }
+            })
+        }
+    }
+}
 
 module.exports = funcion;

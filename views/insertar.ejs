@@ -1,6 +1,6 @@
-<% include ./static/header %>
-<% include ./static/sidebar %>
-<% include ./static/navbar %>
+<%- include ("./static/header")%>
+<%- include ("./static/sidebar") %>
+<%- include ("./static/navbar")%>
 
 
 <div class="container">
@@ -15,10 +15,35 @@
     </div>
     <div class="card bg-light animated bounceInUp">
         <div class=" card-header text-white animated text-center" id="errorText"></div>
+
+
+        <form name="myForm" action="/insertar_excel" method="post" enctype="multipart/form-data">
+            <input type="text" name="base" value="<%=base%>" hidden>
+            <input type="text" name="tabla" value="<%=tabla%>" hidden>
+   
+
+            <div class="text-center" id="insert_excel">
+                <div class="box">
+                    <input id="excelFile" name="excelFile" type="file"  accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                    <label for="excelFile"><strong><span class="fas fa-file-excel text-success"></span></strong></label>
+                </div>
+               
+                    <input id="btn_excel" type="submit" formaction="/insertar_excel" class="btn btn-success  btn-sm btn-block animated"></input>
+                    
+                
+            </div>
+        </form>
+
+
         <form action="/insertar" method="post">
 
-            <input type="text" name="base" id="base" value="<%=base%>" hidden>
-            <input type="text" name="tabla" id="tabla" value="<%=tabla%>" hidden>
+
+
+
+
+            <input type="text" name="base" value="<%=base%>" hidden>
+            <input type="text" name="tabla" value="<%=tabla%>" hidden>
+      
 
             <div class="card-body bg-white">
                 <table class="table  table-borderless">
@@ -47,7 +72,7 @@
                                     <input type="text" class="form-control" name="<%= values[i].Field %>"
                                         id="<%= values[i].Field %>" maxlength="<%=tamaño%>" required>
                                     <% }else if(tipo == "int") {%>
-                                        <% let n = "9".repeat(tamaño)%>
+                                    <% let n = "9".repeat(tamaño)%>
                                     <input type="number" class="form-control" name="<%= values[i].Field %>"
                                         id="<%= values[i].Field %>" min="0" max="<%=n%>" required>
                                     <% }else{%>
@@ -62,7 +87,7 @@
                 </table>
 
                 <div>
-                    <button type="submit" class="btn btn-primary btn-block" id="btnGuardar" disabled>Guardar</button>
+                    <button type="submit" class="btn btn-primary btn-block" id="btnGuardar">Guardar</button>
                 </div>
             </div>
 
@@ -76,9 +101,32 @@
 
 </div>
 
-<% include ./static/footer %>
+<%- include ("./static/footer")%>
 
 <script>
+
+    
+
+if ("<%=tabla%>" == "empleados" ) {
+        document.getElementById("insert_excel").setAttribute("hidden",true)
+}
+
+    document.getElementById("btn_excel").disabled = true;
+    document.getElementById("btn_excel").classList.add("flipOutX")
+
+    document.getElementById("excelFile").addEventListener("change", () => {
+        if (document.getElementById("excelFile").files.length == 0) {
+            document.getElementById("btn_excel").disabled = true;
+            document.getElementById("btn_excel").classList.remove("flipInX")
+            document.getElementById("btn_excel").classList.add("flipOutX")
+
+        } else {
+            document.getElementById("btn_excel").disabled = false;
+            document.getElementById("btn_excel").classList.remove("flipOutX")
+            document.getElementById("btn_excel").classList.add("flipInX")
+        }
+    });
+
 
     function findId() {
         let currentId
@@ -148,8 +196,8 @@
                 xhr.onload = function () {
                     if (this.status == 200) {
                         valoresUnicos = JSON.parse(this.responseText)
-                 
-                        
+
+
                         let existe = false
                         for (let i = 0; i < valoresUnicos.length; i++) {
                             existe = false

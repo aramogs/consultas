@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const routesController = require('./routesController')
+const multer = require('multer')
+const upload = multer()
 
 //Routes
 
@@ -18,7 +20,8 @@ router.post('/eliminar',routesController.eliminar_POST);
 router.post('/agregar',routesController.agregar_POST);
 router.get('/consulta_sap_duplicado/:id', routesController.consulta_valor_unico_GET);
 router.get('/consulta_emp_duplicado/:id', routesController.consulta_valor_unico_GET);
-router.post('/insertar',routesController.insertar_POST);
+router.post('/insertar', routesController.insertar_POST);
+router.post('/insertar_excel',  upload.single("excelFile"), routesController.insertar_excel_POST);
 router.get('/consulta_vulca',routesController.consulta_vulca_GET);
 router.get('*', (req, res) => {
   res.redirect('http://tftdelsrv001:3000/not_found');
