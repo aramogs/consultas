@@ -35,6 +35,7 @@ controller.consulta_rackestampado_GET = (req, res) => {
     base = "b10";
     tabla = "etiquetas_semi_consulta";
     funcion.Search_Tabla(base, tabla, (err, etiquetas_info) => {
+        if (err) console.error(err);
         res.render('consulta_rackestampado.ejs', {
             etiquetas_info,
             base,
@@ -49,6 +50,7 @@ controller.consulta_vulcanizado_GET = (req, res) => {
     base = "b10_bartender";
     tabla = "vulc_consulta";
     funcion.Search_Tabla(base, tabla, (err, etiquetas_info) => {
+        if (err) console.error(err);
         res.render('consulta_base.ejs', {
             etiquetas_info,
             base,
@@ -62,6 +64,7 @@ controller.consulta_BMW_GET = (req, res) => {
     base = "b10";
     tabla = "b10sap";
     funcion.Search_Tabla(base, tabla, (err, etiquetas_info) => {
+        if (err) console.error(err);
         res.render('consulta_base.ejs', {
             etiquetas_info,
             base,
@@ -76,6 +79,7 @@ controller.consulta_empleados_GET = (req, res) => {
     base = "b10";
     tabla = "empleados";
     funcion.Search_Tabla(base, tabla, (err, etiquetas_info) => {
+        if (err) console.error(err);
         res.render('consulta_base.ejs', {
             etiquetas_info,
             base,
@@ -89,6 +93,7 @@ controller.consulta_ford_GET = (req, res) => {
     base = "b10_bartender";
     tabla = "ford";
     funcion.Search_Tabla(base, tabla, (err, etiquetas_info) => {
+        if (err) console.error(err);
         res.render('consulta_base.ejs', {
             etiquetas_info,
             base,
@@ -101,6 +106,7 @@ controller.consulta_gm_GET = (req, res) => {
     base = "b10_bartender";
     tabla = "gm";
     funcion.Search_Tabla(base, tabla, (err, etiquetas_info) => {
+        if (err) console.error(err);
         res.render('consulta_base.ejs', {
             etiquetas_info,
             base,
@@ -113,6 +119,7 @@ controller.consulta_vwmexico_GET = (req, res) => {
     base = "b10_bartender";
     tabla = "vwmexico";
     funcion.Search_Tabla(base, tabla, (err, etiquetas_info) => {
+        if (err) console.error(err);
         res.render('consulta_base.ejs', {
             etiquetas_info,
             base,
