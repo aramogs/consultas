@@ -12,6 +12,7 @@ app.use(express.static('public'));
 app.use(express.static('node_modules'));
 //Requiriendo rutas
 const routes = require('./routes/routes');
+const { log } = require('console');
 
 
 
