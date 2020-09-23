@@ -25,6 +25,8 @@ function acceso(req) {
             acceso.push("logistica")
         } else if (req.connection.userGroups[i].toString() == 'TFT\\TFT.DEL.PAGES_Consultas_Produccion') {
             acceso.push("produccion")
+        }else if (req.connection.userGroups[i].toString() == 'TFT\\TFT.DEL.PAGES_Consultas_Empleados') {
+            acceso.push("empleados")
         }
     }
     return (acceso)
@@ -136,7 +138,8 @@ controller.actualizar_POST = (req, res) => {
     tabla = ids[2];
     origen = req.body.origen[0]
 
-    if ((acceso(req,res)).includes("logistica") && tabla != "vulc_consulta" || (acceso(req,res)).includes("produccion") && tabla == "vulc_consulta") {
+    if ((acceso(req,res)).includes("logistica") && tabla != "vulc_consulta" || (acceso(req,res)).includes("produccion") && tabla == "vulc_consulta"
+    || (acceso(req,res)).includes("empleados") && tabla == "empleados") {
 
         funcion.Search(base, tabla, id, (err, valores) => {
             funcion.Discover_Search(base, tabla, (err, formato) => {
@@ -200,7 +203,8 @@ controller.eliminar_POST = (req, res) => {
     tabla = ids[2];
     let origen =req.body.origen[0]
 
-    if ((acceso(req,res)).includes("logistica") && tabla != "vulc_consulta" || (acceso(req,res)).includes("produccion") && tabla == "vulc_consulta") {
+    if ((acceso(req,res)).includes("logistica") && tabla != "vulc_consulta" || (acceso(req,res)).includes("produccion") && tabla == "vulc_consulta"
+    || (acceso(req,res)).includes("empleados") && tabla == "empleados") {
         funcion.Delete(base, tabla, id, (err, result) => {
             res.render('eliminado.ejs', {
                 id,
@@ -219,7 +223,8 @@ controller.agregar_POST = (req, res) => {
     base = ids[0];
     tabla = ids[1];
 
-    if ((acceso(req,res)).includes("logistica") && tabla != "vulc_consulta" || (acceso(req,res)).includes("produccion") && tabla == "vulc_consulta") {
+    if ((acceso(req,res)).includes("logistica") && tabla != "vulc_consulta" || (acceso(req,res)).includes("produccion") && tabla == "vulc_consulta" 
+    || (acceso(req,res)).includes("empleados") && tabla == "empleados") {
 
         if (tabla == "vulc_consulta") {
             tabla = "vulc";
