@@ -21,7 +21,7 @@ function acceso(req) {
        
 
     for (let i = 0; i < req.connection.userGroups.length; i++) {
-        console.log(req.connection.userGroups[i].toString());
+       
         if (req.connection.userGroups[i].toString() == 'TFT\\TFT.DEL.PAGES_Consultas_Logistica') {
             acceso.push("logistica")
         } else if (req.connection.userGroups[i].toString() == 'TFT\\TFT.DEL.PAGES_Consultas_Produccion') {
@@ -224,8 +224,7 @@ controller.agregar_POST = (req, res) => {
     base = ids[0];
     tabla = ids[1];
 
-    console.log("tabla: "+tabla)
-    console.log("acceso: "+acceso(req,res))
+    
 
     if ((acceso(req,res)).includes("logistica") && tabla != "vulc_consulta" || (acceso(req,res)).includes("produccion") && tabla == "vulc_consulta" 
     || (acceso(req,res)).includes("empleados") && tabla == "empleados") {
