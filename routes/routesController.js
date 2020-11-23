@@ -168,6 +168,12 @@ controller.guardar_POST = (req, res) => {
     id = req.body.id;
     arreglo = [];
     origen = req.body.origen
+
+    if (tabla == "vulc_consulta") {
+        tabla = "vulc";
+    }
+
+
     funcion.Discover_Search(base, tabla, (err, formato) => {
 
         let info = Object.entries(obj);
