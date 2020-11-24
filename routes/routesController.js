@@ -193,7 +193,7 @@ controller.guardar_POST = (req, res) => {
         
 
         arregloFinal = arreglo.join();
-        console.log(arregloFinal)
+       
         funcion.Update(base, tabla, arregloFinal, id, (err, result) => {
             res.render('guardado.ejs', {
                 arreglo,
