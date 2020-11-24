@@ -173,7 +173,7 @@ controller.guardar_POST = (req, res) => {
         tabla = "vulc";
     }
 
-
+ 
     funcion.Discover_Search(base, tabla, (err, formato) => {
 
         let info = Object.entries(obj);
@@ -189,7 +189,11 @@ controller.guardar_POST = (req, res) => {
                 }
             }
         }
+
+        
+
         arregloFinal = arreglo.join();
+        console.log(arregloFinal)
         funcion.Update(base, tabla, arregloFinal, id, (err, result) => {
             res.render('guardado.ejs', {
                 arreglo,

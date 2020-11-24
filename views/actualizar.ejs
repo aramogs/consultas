@@ -42,7 +42,18 @@
                             <td>
                                 <div class="form-group">
                                     <% if(i<2){ %>
-                                    <input type="text" class="form-control" name="<%= keys[i] %>" id="<%= keys[i] %>"readonly value="<%=(values[i])%>">
+
+                                    <% if(i == 0){ %>
+                                        <input type="text" class="form-control" name="<%= keys[i] %>" id="<%= keys[i] %>"readonly value="<%=(values[i])%>">
+                                    <% }else{ %>
+                                     
+                                            <% if(values[i][0]=="5"){ %>
+                                                <input type="text" class="form-control" name="<%= keys[i] %>" id="<%= keys[i] %>"readonly value="P<%=(values[i])%>">
+                                            <% }else { %>
+                                                <input type="text" class="form-control" name="<%= keys[i] %>" id="<%= keys[i] %>"readonly value="<%=(values[i])%>">
+                                            <% } %>
+                                    <% } %> 
+
                                     <% }else if(tipo == "varchar"){ %>
                                         <% tamaño = regExp.exec(formato[i].Type)[1]%>
                                         <% let n = "9".repeat(tamaño)%>
