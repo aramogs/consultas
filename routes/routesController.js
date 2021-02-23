@@ -64,8 +64,8 @@ controller.consulta_vulcanizado_GET = (req, res) => {
 };
 
 controller.consulta_BMW_GET = (req, res) => {
-    base = "b10";
-    tabla = "b10sap";
+    base = "b10_bartender";
+    tabla = "bmw";
     funcion.Search_Tabla(base, tabla, (err, etiquetas_info) => {
         if (err) console.error(err);
         res.render('consulta_base.ejs', {
