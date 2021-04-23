@@ -15,6 +15,7 @@ router.get('/consulta_gm', routesController.consulta_gm_GET);
 router.get('/consulta_vwmexico', routesController.consulta_vwmexico_GET);
 router.get('/consulta_navistar', routesController.consulta_navistar_GET);
 router.get('/consulta_vulcanizado', routesController.consulta_vulcanizado_GET);
+router.get('/consulta_extrusion', routesController.consulta_extrusion_GET);
 router.post('/actualizar',routesController.actualizar_POST);
 router.post('/guardar',routesController.guardar_POST);
 router.post('/eliminar',routesController.eliminar_POST);

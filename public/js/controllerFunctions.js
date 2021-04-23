@@ -6,7 +6,7 @@ const db_b = require('../db/conn_bartender');
 
 
 funcion.Search_etiquetas_semi = (callback) => {
-    db.query(`SELECT * FROM etiquetas_semi_consulta WHERE 1`, function (err, result, fields) {
+    db(`SELECT * FROM etiquetas_semi_consulta WHERE 1`, function (err, result, fields) {
         if (err) {
             callback(err, null);
         } else {
@@ -18,7 +18,7 @@ funcion.Search_etiquetas_semi = (callback) => {
 
 funcion.Search_Tabla = (base, tabla, callback) => {
     if (base == "b10") {
-        db.query(`SELECT * FROM ${tabla} WHERE 1`, function (err, result, fields) {
+        db(`SELECT * FROM ${tabla} WHERE 1`, function (err, result, fields) {
             if (err) {
                 callback(err, null);
             } else {
@@ -26,7 +26,7 @@ funcion.Search_Tabla = (base, tabla, callback) => {
             }
         })
     } else {
-        db_b.query(`SELECT * FROM ${tabla} WHERE 1`, function (err, result, fields) {
+        db_b(`SELECT * FROM ${tabla} WHERE 1`, function (err, result, fields) {
             if (err) {
                 callback(err, null);
             } else {
@@ -39,7 +39,7 @@ funcion.Search_Tabla = (base, tabla, callback) => {
 
 funcion.Search = (base, tabla, id, callback) => {
     if (base == "b10") {
-        db.query(`SELECT * FROM ${tabla} WHERE id = ${id}`, function (err, result, fields) {
+        db(`SELECT * FROM ${tabla} WHERE id = ${id}`, function (err, result, fields) {
             if (err) {
                 callback(err, null);
             } else {
@@ -47,7 +47,7 @@ funcion.Search = (base, tabla, id, callback) => {
             }
         })
     } else {
-        db_b.query(`SELECT * FROM ${tabla} WHERE id = ${id}`, function (err, result, fields) {
+        db_b(`SELECT * FROM ${tabla} WHERE id = ${id}`, function (err, result, fields) {
             if (err) {
                 callback(err, null);
             } else {
@@ -62,7 +62,7 @@ funcion.Discover_Search = (base, tabla, callback) => {
         tabla = "vulc_consulta"
     }
     if (base == "b10") {
-        db.query(`SHOW COLUMNS FROM ${tabla} `, function (err, result, fields) {
+        db(`SHOW COLUMNS FROM ${tabla} `, function (err, result, fields) {
             if (err) {
                 callback(err, null);
             } else {
@@ -70,7 +70,7 @@ funcion.Discover_Search = (base, tabla, callback) => {
             }
         })
     } else {
-        db_b.query(`SHOW COLUMNS FROM ${tabla} `, function (err, result, fields) {
+        db_b(`SHOW COLUMNS FROM ${tabla} `, function (err, result, fields) {
             if (err) {
                 callback(err, null);
             } else {
@@ -85,7 +85,7 @@ funcion.Discover_Search = (base, tabla, callback) => {
 funcion.Update = (base, tabla, arreglo, id, callback) => {
 
     if (base == "b10") {
-        db.query(`UPDATE ${tabla} SET ${arreglo} WHERE id = ${id} `, function (err, result, fields) {
+        db(`UPDATE ${tabla} SET ${arreglo} WHERE id = ${id} `, function (err, result, fields) {
             if (err) {
                 callback(err, null);
             } else {
@@ -93,7 +93,7 @@ funcion.Update = (base, tabla, arreglo, id, callback) => {
             }
         })
     } else {
-        db_b.query(`UPDATE ${tabla} SET ${arreglo} WHERE id = ${id}`, function (err, result, fields) {
+        db_b(`UPDATE ${tabla} SET ${arreglo} WHERE id = ${id}`, function (err, result, fields) {
             if (err) {
                 callback(err, null);
             } else {
@@ -107,7 +107,7 @@ funcion.Update = (base, tabla, arreglo, id, callback) => {
 funcion.Delete = (base, tabla, id, callback) => {
 
     if (base == "b10") {
-        db.query(`DELETE FROM ${tabla} WHERE id = ${id} `, function (err, result, fields) {
+        db(`DELETE FROM ${tabla} WHERE id = ${id} `, function (err, result, fields) {
             if (err) {
                 callback(err, null);
             } else {
@@ -115,7 +115,7 @@ funcion.Delete = (base, tabla, id, callback) => {
             }
         })
     } else {
-        db_b.query(`DELETE FROM ${tabla} WHERE id = ${id}`, function (err, result, fields) {
+        db_b(`DELETE FROM ${tabla} WHERE id = ${id}`, function (err, result, fields) {
             if (err) {
                 callback(err, null);
             } else {
@@ -127,7 +127,7 @@ funcion.Delete = (base, tabla, id, callback) => {
 }
 
 funcion.Search_Tables = (base, callback) => {
-    db.query(`SELECT table_name FROM information_schema.tables WHERE table_schema = '${base}'`, function (err, result, fields) {
+    db(`SELECT table_name FROM information_schema.tables WHERE table_schema = '${base}'`, function (err, result, fields) {
         if (err) {
             callback(err, null);
         } else {
@@ -150,7 +150,7 @@ funcion.Search_SAP_Union = (tables, base, search_field, callback) => {
     }
 
     if (base == "b10" && search_field == "no_sap") {
-        db.query(`SELECT ${search_field} FROM b10sap   `, function (err, result, fields) {
+        db(`SELECT ${search_field} FROM b10sap   `, function (err, result, fields) {
             if (err) {
                 callback(err, null);
             } else {
@@ -158,7 +158,7 @@ funcion.Search_SAP_Union = (tables, base, search_field, callback) => {
             }
         })
     } else if (base == "b10" && search_field == "emp_tag") {
-        db.query(`SELECT ${search_field} FROM empleados   `, function (err, result, fields) {
+        db(`SELECT ${search_field} FROM empleados   `, function (err, result, fields) {
             if (err) {
                 callback(err, null);
             } else {
@@ -166,7 +166,7 @@ funcion.Search_SAP_Union = (tables, base, search_field, callback) => {
             }
         })
     } else {
-        db_b.query(`SELECT ${search.join(" ")}   `, function (err, result, fields) {
+        db_b(`SELECT ${search.join(" ")}   `, function (err, result, fields) {
             if (err) {
                 callback(err, null);
             } else {
@@ -180,7 +180,7 @@ funcion.Search_SAP_Union = (tables, base, search_field, callback) => {
 funcion.Insert = (base, tabla, titulos, valores, callback) => {
 
     if (base == "b10") {
-        db.query(`INSERT INTO ${tabla} (${titulos}) VALUES (${valores}) `, function (err, result, fields) {
+        db(`INSERT INTO ${tabla} (${titulos}) VALUES (${valores}) `, function (err, result, fields) {
             if (err) {
                 callback(err, null);
             } else {
@@ -188,7 +188,7 @@ funcion.Insert = (base, tabla, titulos, valores, callback) => {
             }
         })
     } else {
-        db_b.query(`INSERT INTO ${tabla} (${titulos}) VALUES (${valores}) `, function (err, result, fields) {
+        db_b(`INSERT INTO ${tabla} (${titulos}) VALUES (${valores}) `, function (err, result, fields) {
             if (err) {
                 callback(err, null);
             } else {
@@ -224,7 +224,7 @@ funcion.Insert_excel = (base, tabla, titulos, valores, callback) => {
             duplicate.push(`${titulos[y]}=${valor}`)
         }  
         if (base == "b10") {
-            db.query(`INSERT INTO ${tabla} (${titulos.join()}) VALUES (${valores_finales}) ON DUPLICATE KEY UPDATE ${duplicate}  `, function (err, result, fields) {
+            db(`INSERT INTO ${tabla} (${titulos.join()}) VALUES (${valores_finales}) ON DUPLICATE KEY UPDATE ${duplicate}  `, function (err, result, fields) {
                 if (err) {
                     callback(err, null);
                 } else {
@@ -232,7 +232,7 @@ funcion.Insert_excel = (base, tabla, titulos, valores, callback) => {
                 }
             })
         } else {
-            db_b.query(`INSERT INTO ${tabla} (${titulos.join()}) VALUES (${valores_finales}) ON DUPLICATE KEY UPDATE ${duplicate}  `, function (err, result, fields) {
+            db_b(`INSERT INTO ${tabla} (${titulos.join()}) VALUES (${valores_finales}) ON DUPLICATE KEY UPDATE ${duplicate}  `, function (err, result, fields) {
                 if (err) {
                     callback(err, null);
                 } else {
