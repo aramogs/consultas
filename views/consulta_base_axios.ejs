@@ -1,0 +1,162 @@
+<%- include ("./static/header") %>
+    <%- include ("./static/sidebar") %>
+        <%- include ("./static/navbar") %>
+
+            <script>
+                let req = new XMLHttpRequest();
+                req.open('GET', document.location, false);
+                req.send(null);
+                let origen = req.responseURL
+            </script>
+
+            <div class="col-xl-12 jumbotron jumbotron-fluid animated bounceInDown bg-transparent jumbotronBg">
+                <div class="container">
+                    <img src="/img/TristoneLogo.png" class="img-logo rounded mx-auto d-block" alt="Tristone Flowtech">
+                    <h1 class="display-4 text-center csvTitulo">Base de Datos <%= tabla.toUpperCase() %>
+                    </h1>
+                    <p class="lead text-center">Numeros dados de alta</p>
+                </div>
+            </div>
+            <div class="container-fluid animated bounceInUp">
+                <div class="card bg-light  ">
+                    <div class=" card-header text-white bg-secondary ">
+                        <form method="post">
+                            <div class="row" id="row_">
+
+                                <div class="col-lg-2">
+                                    <button type="submit" formaction="/agregar" class="btn btn-success  rounded-pill"
+                                        name="id" value="<%= base %>,<%= tabla %>"><span class="fas fa-plus"> Insertar
+                                </div>
+                                <div class="col-lg-8 text-center">
+                                    <%= tabla.toUpperCase() %>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-body">
+                        <div class="container-fluid table-responsive">
+                            <form id="showData" method="post" class="text-center"></form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <%- include ("./static/footer") %>
+
+                <script>
+
+
+
+                    axios({
+                        method: 'GET',
+                        url: `/consulta_extrusion_tabla`,
+                        data: '',
+                        headers: { 'content-type': 'application/json' }
+                    })
+                        .then((result) => {
+                            console.log(result.data)
+
+                            let el = document.createElement("input");
+                            el.value = origen
+                            el.id = "origen_insert"
+                            el.name = "origen"
+                            el.setAttribute("hidden", true)
+                            el.setAttribute("value", origen)
+                            //el.style.visibility = "hidden";
+
+                            let form = document.getElementById("row_");
+                            form.appendChild(el);
+
+                            etiquetas_semi = result.data
+
+                            // De la variable con la informaicon se toman las llaves que seran los titulos o headers de la tabla y se almacenan en col
+                            let col = [];
+                            for (let i = 0; i < etiquetas_semi.length; i++) {
+                                for (let key in etiquetas_semi[i]) {
+                                    if (col.indexOf(key) === -1) {
+                                        col.push(key);
+                                    }
+                                }
+                            }
+
+                            // Se crea una tabla
+                            let table = document.createElement("table");
+
+
+
+
+                            // Se llenan las filas de la tabla
+                            for (let i = 0; i < etiquetas_semi.length; i++) {
+                                tr = table.insertRow(-1);
+                                for (let j = 0; j < col.length; j++) {
+                                    let tabCell = tr.insertCell(-1);
+                                    tabCell.innerHTML = etiquetas_semi[i][col[j]];
+
+
+                                    let firstCol = table.rows[i].cells[0]; //first column
+                                    firstCol.innerHTML = `<input type="text" name="origen" value=${origen} hidden> <p hidden>${etiquetas_semi[i][col[0]]}</p><button type="submit" formaction="/actualizar" class="btn btn-info  rounded-pill"
+                                        name="id" value="${etiquetas_semi[i][col[0]]},<%=base%>,<%=tabla%>"><span
+                                            class="fas fa-pencil-alt">
+                                            <button type="submit" formaction="/eliminar"
+                                                class="btn btn-danger  rounded-pill" name="id"
+                                                value="${etiquetas_semi[i][col[0]]},<%=base%>,<%=tabla%>"
+                                                onclick="return confirm('ELIMINAR ID ${etiquetas_semi[i][col[0]]} ?')"><span
+                                                    class="fas fa-times"></span>`;
+
+                                }
+                            }
+
+                            // Se inserta la tabla en el id showData
+                            let divContainer = document.getElementById("showData");
+                            divContainer.innerHTML = "";
+                            divContainer.appendChild(table);
+
+                            // Se le agrega el id para datatables
+                            $("table").attr("id", "myTable").addClass("thead-dark table table-sm");;
+
+
+                            // Se crea el header y se agrega un tr
+                            table.createTHead()
+                            let thead = document.getElementsByTagName("thead")[0]
+                            let row = thead.insertRow()
+
+                            //Por cada th en thead este se agrega a row
+                            for (let i = 0; i < col.length; i++) {
+                                let th = document.createElement("th");
+                                th.innerHTML = col[i].toUpperCase();
+                                row.appendChild(th)
+                            }
+
+                        })
+                        .then(() => {
+                            titulo = $('.csvTitulo').text()
+                            $('#myTable').dataTable({
+                                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                                dom: 'Blfrtip',
+                                buttons: [
+                                    {
+                                        extend: 'copyHtml5',
+                                        title: titulo
+                                    },
+                                    {
+                                        extend: 'csvHtml5',
+                                        title: titulo
+                                    },
+                                    {
+                                        extend: 'excelHtml5',
+                                        title: null,
+                                        filename: titulo
+                                    },
+                                    // {
+                                    //   text: 'My button',
+                                    //   action: function ( e, dt, node, config ) {
+                                    //       alert( 'Button activated' );
+                                    //   }
+                                    // }
+                                ]
+                            });
+                        })
+
+
+
+                </script>
