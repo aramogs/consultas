@@ -17,13 +17,16 @@ router.get('/consulta_navistar', routesController.consulta_navistar_GET);
 router.get('/consulta_vulcanizado', routesController.consulta_vulcanizado_GET);
 router.get('/consulta_extrusion', routesController.consulta_extrusion_GET);
 router.post('/actualizar',routesController.actualizar_POST);
+router.post('/actualizar_extrusion',routesController.actualizar_extrusion_POST);
 router.post('/guardar',routesController.guardar_POST);
 router.post('/eliminar',routesController.eliminar_POST);
 router.post('/agregar',routesController.agregar_POST);
+router.post('/agregar_extrusion',routesController.agregar_extrusion_POST);
 router.get('/consulta_sap_duplicado/:id', routesController.consulta_valor_unico_GET);
 router.get('/consulta_emp_duplicado/:id', routesController.consulta_valor_unico_GET);
 router.post('/insertar', routesController.insertar_POST);
 router.post('/insertar_excel',  upload.single("excelFile"), routesController.insertar_excel_POST);
+router.post('/insertar_excel_extrusion',  upload.single("excelFile"), routesController.insertar_excel_extrusion_POST);
 router.get('/consulta_vulca',routesController.consulta_vulca_GET);
 router.get('*', (req, res) => {
   res.redirect('http://tftdelsrv001:3000/not_found');

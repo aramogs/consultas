@@ -1,0 +1,246 @@
+<%- include ("./static/header")%>
+<%- include ("./static/sidebar") %>
+<%- include ("./static/navbar")%>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-xl-12 jumbotron jumbotron-fluid animated bounceInDown  bg-transparent jumbotronBg">
+            <div class="container">
+                <img src="/img/TristoneLogo.png" class="img-logo rounded mx-auto d-block" alt="Tristone Flowtech">
+                <h1 class="display-4 text-center csvTitulo">Insertar en Base de Datos</h1>
+            </div>
+        </div>
+
+    </div>
+    <div class="card bg-light animated bounceInUp">
+        <div class=" card-header text-white animated text-center" id="errorText"></div>
+
+
+        <form name="myForm" action="/insertar_excel" method="post" enctype="multipart/form-data">
+            <input type="text" name="base" value="<%=base%>" hidden>
+            <input type="text" name="tabla" value="<%=tabla%>" hidden>
+   
+
+            <div class="text-center" id="insert_excel">
+                <div class="box">
+                    <input id="excelFile" name="excelFile" type="file"  accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                    <label for="excelFile"><strong><span class="fas fa-file-excel text-success"></span></strong></label>
+                </div>
+               
+                    <input id="btn_excel" type="submit" formaction="/insertar_excel_extrusion" class="btn btn-success  btn-sm btn-block animated"></input>
+                    
+                
+            </div>
+        </form>
+
+
+        <form action="/insertar" method="post">
+
+
+
+
+
+            <input type="text" name="base" value="<%=base%>" hidden>
+            <input type="text" name="tabla" value="<%=tabla%>" hidden>
+      
+
+            <div class="card-body bg-white">
+                <table class="table  table-borderless">
+                    <tbody>
+
+                        <% values = Object.values(formato) %>
+
+                        <% for (let i = 0; i < values.length; i++) { %>
+
+
+                        <% let regExp = /\(([^)]+)\)/;%>
+                        <% let tipo = formato[i].Type %>
+                        <% tipo = tipo.split("(")[0] %>
+                        <tr>
+                            <td>
+                                <h5><%=(values[i].Field).toUpperCase()%></h5>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <% if(i<1){ %>
+                                    <input type="text" class="form-control" name="<%= values[i].Field %>"
+                                        id="<%= values[i].Field %>" readonly>
+                                    <% }else if(tipo == "varchar"){ %>
+                                    <% tamaño = regExp.exec(formato[i].Type)[1]%>
+                                    <% let n = "9".repeat(tamaño)%>
+                                    <input type="text" class="form-control" name="<%= values[i].Field %>"
+                                        id="<%= values[i].Field %>" maxlength="<%=tamaño%>" required>
+                                    <% }else if(tipo == "int") {%>
+                                    <% let n = "9".repeat(tamaño)%>
+                                    <input type="number" class="form-control" name="<%= values[i].Field %>"
+                                        id="<%= values[i].Field %>" min="0" max="<%=n%>" required>
+                                    <% }else{%>
+                                    <input type="text" class="form-control" readonly>
+                                    <% } %>
+                                </div>
+                            </td>
+
+                        </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+
+                <div>
+                    <button type="submit" class="btn btn-primary btn-block" id="btnGuardar">Guardar</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+
+    </tbody>
+    </table>
+</div>
+
+</div>
+
+<%- include ("./static/footer")%>
+
+<script>
+
+    
+
+if ("<%=tabla%>" == "empleados" ) {
+        document.getElementById("insert_excel").setAttribute("hidden",true)
+}
+
+    document.getElementById("btn_excel").disabled = true;
+    document.getElementById("btn_excel").classList.add("flipOutX")
+
+    document.getElementById("excelFile").addEventListener("change", () => {
+        if (document.getElementById("excelFile").files.length == 0) {
+            document.getElementById("btn_excel").disabled = true;
+            document.getElementById("btn_excel").classList.remove("flipInX")
+            document.getElementById("btn_excel").classList.add("flipOutX")
+
+        } else {
+            document.getElementById("btn_excel").disabled = false;
+            document.getElementById("btn_excel").classList.remove("flipOutX")
+            document.getElementById("btn_excel").classList.add("flipInX")
+        }
+    });
+
+
+    function findId() {
+        let currentId
+        if ($('#no_sap').length == '1') {
+            $('#no_sap').keyup(function () {
+                let prefix = ""
+
+                if (this.value.indexOf(prefix) !== 0) {
+                    this.value = prefix + this.value;
+                }
+
+                let xhr = new XMLHttpRequest();
+
+                xhr.open('GET', `/consulta_sap_duplicado/<%=base%>`, true);
+
+                //console.log('READYSTATE: ', xhr.readyState);
+
+                xhr.onload = function () {
+                    //console.log('READYSTATE: ', xhr.readyState);
+                    if (this.status == 200) {
+                        valoresUnicos = JSON.parse(this.responseText)
+                        let existe = false
+                        for (let i = 0; i < valoresUnicos.length; i++) {
+                            existe = false
+                            $('#errorText').removeClass('flipInX')
+                            $('#errorText').addClass('flipOutX')
+
+                            $('#errorText').html("Error Valor Duplicado")
+
+                            $('#btnGuardar').attr('disabled', false)
+
+                            if ($('#no_sap').val() == valoresUnicos[i].no_sap) {
+
+                                $('#errorText').html("Error Valor Duplicado")
+                                $('#errorText').removeClass('flipOutX')
+                                $('#errorText').addClass('flipInX')
+                                $('#errorText').addClass('bg-danger')
+                                $('#btnGuardar').attr('disabled', true)
+                                existe = true
+                                break
+                            }
+                        }
+
+
+
+                    } else if (this.status = 404) {
+                        // document.getElementById('text').innerHTML = 'Not Found';
+                    }
+                }
+
+                xhr.onerror = function () {
+                    console.log('Request Error...');
+                }
+
+
+                xhr.send();
+
+            });
+        } else if ($('#emp_tag').length == 1) {
+
+            $('#emp_tag').keyup(function () {
+
+                let xhr = new XMLHttpRequest();
+
+                xhr.open('GET', `/consulta_emp_duplicado/<%=base%>`, true);
+
+                xhr.onload = function () {
+                    if (this.status == 200) {
+                        valoresUnicos = JSON.parse(this.responseText)
+
+
+                        let existe = false
+                        for (let i = 0; i < valoresUnicos.length; i++) {
+                            existe = false
+                            $('#errorText').removeClass('flipInX')
+                            $('#errorText').addClass('flipOutX')
+
+                            $('#errorText').html("Error Valor Duplicado")
+
+                            $('#btnGuardar').attr('disabled', false)
+
+                            if ($('#emp_tag').val() == valoresUnicos[i].emp_tag) {
+
+                                $('#errorText').html("Error Valor Duplicado")
+                                $('#errorText').removeClass('flipOutX')
+                                $('#errorText').addClass('flipInX')
+                                $('#errorText').addClass('bg-danger')
+                                $('#btnGuardar').attr('disabled', true)
+                                existe = true
+                                break
+                            }
+                        }
+
+
+
+                    } else if (this.status = 404) {
+                        // document.getElementById('text').innerHTML = 'Not Found';
+                    }
+                }
+
+                xhr.onerror = function () {
+                    console.log('Request Error...');
+                }
+
+
+                xhr.send();
+
+            });
+        }
+        return currentId
+    }
+    findId()
+
+
+
+
+</script>

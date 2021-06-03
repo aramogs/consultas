@@ -1,0 +1,89 @@
+<%- include ("./static/header") %>
+<%- include ("./static/sidebar") %>
+<%- include ("./static/navbar") %>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-xl-12 jumbotron jumbotron-fluid animated bounceInDown  bg-transparent jumbotronBg">
+            <div class="container">
+                <img src="/img/TristoneLogo.png" class="img-logo rounded mx-auto d-block" alt="Tristone Flowtech">
+                <h1 class="display-4 text-center csvTitulo">Actualizacion de Base de Datos</h1>
+            </div>
+        </div>
+
+    </div>
+    <div class="card bg-light animated bounceInUp">
+        <form action="/guardar" method="post">
+
+              <input type="text"  name="base" id="base" value="<%=base%>" hidden>
+              <input type="text"  name="tabla" id="tabla" value="<%=tabla%>" hidden>
+              <input type="text"  name="origen" id="origen" value="<%=origen%>" hidden>
+
+            <div class="card-body bg-white">
+                <table class="table  table-borderless">
+                    <tbody>
+                        <% keys = Object.keys(valores[0]) %>
+                        <% values = Object.values(valores[0]) %>
+                        <% for (let i = 0; i < keys.length; i++) { %>
+
+
+                        <% let regExp = /\(([^)]+)\)/;%>
+                        <% let tipo = formato[i].Type %>
+                        <% tipo = tipo.split("(")[0] %>
+
+                       
+                        
+                        
+                        <tr>
+                            <td>
+                                <h5><%=(keys[i]).toUpperCase()%></h5>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <% if(i<2){ %>
+
+                                    <% if(i == 0){ %>
+                                        <input type="text" class="form-control" name="<%= keys[i] %>" id="<%= keys[i] %>"readonly value="<%=(values[i])%>">
+                                    <% }else{ %>
+                                     
+                                            <% if(values[i][0]=="5"){ %>
+                                                <input type="text" class="form-control" name="<%= keys[i] %>" id="<%= keys[i] %>"readonly value="<%=(values[i])%>">
+                                            <% }else { %>
+                                                <input type="text" class="form-control" name="<%= keys[i] %>" id="<%= keys[i] %>"readonly value="<%=(values[i])%>">
+                                            <% } %>
+                                    <% } %> 
+
+                                    <% }else if(tipo == "varchar"){ %>
+                                        <% tamaño = regExp.exec(formato[i].Type)[1]%>
+                                        <% let n = "9".repeat(tamaño)%>
+                                    <input type="text" class="form-control" name="<%= keys[i] %>" id="<%= keys[i] %>"value="<%=(values[i])%>" maxlength="<%=tamaño%>">
+                                    <% }else if(tipo == "int") {%>
+                                        <% tamaño = regExp.exec(formato[i].Type)[1]%>
+                                        <% let n = "9".repeat(tamaño)%>
+                                    <input type="number" class="form-control"name="<%= keys[i] %>" id="<%= keys[i] %>"value="<%=(values[i])%>" min="0" max="<%=n%>">
+                                    <% }else{%>
+                                        <input type="text" class="form-control" readonly>
+                                    <% } %> 
+                                </div>
+                            </td>
+                        </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+                <div >
+                    <button type="submit" class="btn btn-primary btn-block">Guardar</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+
+    </tbody>
+    </table>
+</div>
+
+</div>
+
+<%- include ("./static/footer") %>

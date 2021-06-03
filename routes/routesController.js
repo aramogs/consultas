@@ -68,7 +68,7 @@ controller.consulta_extrusion_GET = (req, res) => {
     tabla = "extr";
     funcion.Search_Tabla(base, tabla, (err, etiquetas_info) => {
         if (err) console.error(err);
-        res.render('consulta_base.ejs', {
+        res.render('consulta_extrusion.ejs', {
             etiquetas_info,
             base,
             tabla
@@ -186,6 +186,34 @@ controller.actualizar_POST = (req, res) => {
 
 };
 
+controller.actualizar_extrusion_POST = (req, res) => {
+
+    ids = (req.body.id).split(",");
+    id = ids[0];
+    base = ids[1];
+    tabla = ids[2];
+    origen = req.body.origen[0]
+
+    if ((acceso(req,res)).includes("logistica") && tabla != "vulc_consulta" || (acceso(req,res)).includes("produccion") && tabla == "vulc_consulta"
+    || (acceso(req,res)).includes("empleados") && tabla == "empleados") {
+
+        funcion.Search(base, tabla, id, (err, valores) => {
+            funcion.Discover_Search(base, tabla, (err, formato) => {
+                res.render("actualizar_extrusion.ejs", {
+                    valores,
+                    formato,
+                    base,
+                    tabla,
+                    origen
+                });
+            });
+        });
+    } else {
+        res.render("acceso_denegado.ejs")
+    }
+
+};
+
 
 controller.guardar_POST = (req, res) => {
 
@@ -273,6 +301,34 @@ controller.agregar_POST = (req, res) => {
         funcion.Discover_Search(base, tabla, (err, formato) => {
             formato = Object.assign({}, formato);
             res.render("insertar.ejs", {
+                formato,
+                base,
+                tabla
+            });
+        });
+    } else {
+        res.render("acceso_denegado.ejs")
+    }
+}
+
+controller.agregar_extrusion_POST = (req, res) => {
+
+    ids = (req.body.id).split(",");
+    base = ids[0];
+    tabla = ids[1];
+
+    
+
+    if ((acceso(req,res)).includes("logistica") && tabla != "vulc_consulta" || (acceso(req,res)).includes("produccion") && tabla == "vulc_consulta" 
+    || (acceso(req,res)).includes("empleados") && tabla == "empleados") {
+
+        if (tabla == "vulc_consulta") {
+            tabla = "vulc";
+        }
+
+        funcion.Discover_Search(base, tabla, (err, formato) => {
+            formato = Object.assign({}, formato);
+            res.render("insertar_extrusion.ejs", {
                 formato,
                 base,
                 tabla
@@ -423,6 +479,116 @@ controller.insertar_excel_POST = (req, res) => {
                                     valores.push(arreglo[i])
                                     
                                 }
+
+                                
+                            }
+
+                            if (no_sap.length != unique.length) {
+                                res.render('guardado_excel.ejs', {
+                                    arreglo,
+                                    estado: "Error",
+                                    mensaje: "Numero de SAP duplicado verifique su informacion",
+                                    id:[base,tabla]
+                                });
+                            }else{
+                                funcion.Insert_excel(base, tabla, titulos, valores, (err, result) => { })
+                                res.render('guardado_excel.ejs', {
+                                    arreglo,
+                                    estado: "OK",
+                                    mensaje: "",
+                                    id:[base,tabla]
+                                });
+                            }
+
+                        }
+                    } else {
+                        res.render('guardado_excel.ejs', {
+                            arreglo,
+                            estado: "Error",
+                            mensaje: "Columnas del documento no coinciden con la base de datos",
+                            id:[base,tabla]
+                        });
+                    }
+            })
+    })
+}
+
+controller.insertar_excel_extrusion_POST = (req, res) => {
+
+    let obj = req.body;
+    let base = req.body.base;
+    let tabla = req.body.tabla;
+
+
+    let arreglo = [];
+    let titulos = [];
+    let titulos2 = [];
+    let valores = [];
+    let no_sap = [];
+    let no_sap2;
+    let count = 0;
+    const wb = new Excel.Workbook();
+
+    funcion.Discover_Search(base, tabla, (err, formato) => {
+
+        wb.xlsx.load(req.file.buffer)
+            .then(() => {
+                worksheet = wb.worksheets[0]
+                worksheet.eachRow(function (row, rowNumber) {
+                    val = row.values
+                    for (let i = 0; i < val.length; i++) {
+                        if (val[i] === undefined) {
+                            val[i] = " "
+                        }
+
+                    }
+                    arreglo.push(val)
+                });
+            })
+            .then(() => {
+                for (let i = 0; i < arreglo.length; i++) {
+                    arreglo[i].shift()
+                }
+                for (let i = 0; i < arreglo[0].length; i++) {
+                    titulos.push(`\`${arreglo[0][i]}\``)
+                    titulos2.push((arreglo[0][i]).toLowerCase())
+                }
+            })
+            .then(() => {
+                    if (formato.length == titulos2.length) {
+                        for (let i = 0; i < titulos2.length; i++) {
+
+                            if (titulos2.includes(formato[i].Field)) {count++}
+                        }
+
+                        if (formato.length != count) {
+                            res.render('guardado_excel.ejs', {
+                                arreglo,
+                                estado: "Error",
+                                mensaje: "Titulos del documento no coinciden con la base de datos",
+                                id:[base,tabla]
+                            });
+                        } else {
+
+                            for (let i = 0; i < titulos2.length; i++) {
+                                if (titulos2[i] == "no_sap") { 
+                                    no_sap2 = i 
+                                }
+                            }
+                            for (let i = 0; i < arreglo.length; i++) {
+                                no_sap.push((arreglo[i][no_sap2]).toUpperCase())
+                            }
+                            let unique = [...new Set(no_sap)];
+                            for (let i = 1; i < arreglo.length; i++) {
+
+                                // if ((arreglo[i][no_sap2]).toUpperCase().startsWith("P")) {
+                                //     valores.push(arreglo[i])
+                                // }else{
+                                //     arreglo[i][no_sap2] = "P"+arreglo[i][no_sap2]
+                                //     valores.push(arreglo[i])
+                                    
+                                // }
+                                valores.push(arreglo[i])
 
                                 
                             }
