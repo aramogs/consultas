@@ -14,7 +14,7 @@
 
     </div>
     <div class="card bg-light animated bounceInUp">
-        <form action="/guardar" method="post">
+        <form action="/guardar_extrusion" method="post">
 
               <input type="text"  name="base" id="base" value="<%=base%>" hidden>
               <input type="text"  name="tabla" id="tabla" value="<%=tabla%>" hidden>
@@ -26,8 +26,6 @@
                         <% keys = Object.keys(valores[0]) %>
                         <% values = Object.values(valores[0]) %>
                         <% for (let i = 0; i < keys.length; i++) { %>
-
-
                         <% let regExp = /\(([^)]+)\)/;%>
                         <% let tipo = formato[i].Type %>
                         <% tipo = tipo.split("(")[0] %>
@@ -59,7 +57,7 @@
                                         <% let n = "9".repeat(tamaño)%>
                                     <input type="text" class="form-control" name="<%= keys[i] %>" id="<%= keys[i] %>"value="<%=(values[i])%>" maxlength="<%=tamaño%>">
                                     <% }else if(tipo == "int") {%>
-                                        <% tamaño = regExp.exec(formato[i].Type)[1]%>
+                                        <% tamaño = 11%>
                                         <% let n = "9".repeat(tamaño)%>
                                     <input type="number" class="form-control"name="<%= keys[i] %>" id="<%= keys[i] %>"value="<%=(values[i])%>" min="0" max="<%=n%>">
                                     <% }else{%>

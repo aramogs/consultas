@@ -66,7 +66,7 @@ controller.consulta_vulcanizado_GET = (req, res) => {
 controller.consulta_extrusion_GET = (req, res) => {
     base = "b10_bartender";
     tabla = "extr";
-    funcion.Search_Tabla(base, tabla, (err, etiquetas_info) => {
+    funcion.Search_Tabla_6(base, tabla, (err, etiquetas_info) => {
         if (err) console.error(err);
         res.render('consulta_extrusion.ejs', {
             etiquetas_info,
@@ -197,8 +197,8 @@ controller.actualizar_extrusion_POST = (req, res) => {
     if ((acceso(req,res)).includes("logistica") && tabla != "vulc_consulta" || (acceso(req,res)).includes("produccion") && tabla == "vulc_consulta"
     || (acceso(req,res)).includes("empleados") && tabla == "empleados") {
 
-        funcion.Search(base, tabla, id, (err, valores) => {
-            funcion.Discover_Search(base, tabla, (err, formato) => {
+        funcion.Search_6(base, tabla, id, (err, valores) => {
+            funcion.Discover_Search_6(base, tabla, (err, formato) => {
                 res.render("actualizar_extrusion.ejs", {
                     valores,
                     formato,
@@ -261,6 +261,52 @@ controller.guardar_POST = (req, res) => {
 
 };
 
+controller.guardar_extrusion_POST = (req, res) => {
+
+    let obj = req.body;
+    base = req.body.base;
+    tabla = req.body.tabla;
+    id = req.body.id;
+    arreglo = [];
+    origen = req.body.origen
+
+    if (tabla == "vulc_consulta") {
+        tabla = "vulc";
+    }
+
+ 
+    funcion.Discover_Search_6(base, tabla, (err, formato) => {
+
+        let info = Object.entries(obj);
+
+        for (let i = 0; i < formato.length; i++) {
+            for (let y = 0; y < info.length; y++) {
+                if (formato[i].Field == info[y][0]) {
+                    if ((formato[i].Type).substring(0, 3) == "int") {
+                        arreglo.push(`\`${info[y][0]}\`=${info[y][1]}`);
+                    } else if ((formato[i].Type).substring(0, 7) == "varchar") {
+                        arreglo.push(`\`${info[y][0]}\`="${info[y][1]}"`);
+                    }
+                }
+            }
+        }
+
+        
+
+        arregloFinal = arreglo.join();
+       
+        funcion.Update_6(base, tabla, arregloFinal, id, (err, result) => {
+            res.render('guardado.ejs', {
+                arreglo,
+                id,
+                estado: "update",
+                origen
+            });
+        });
+    });
+
+};
+
 controller.eliminar_POST = (req, res) => {
 
     ids = (req.body.id).split(",");
@@ -272,6 +318,27 @@ controller.eliminar_POST = (req, res) => {
     if ((acceso(req,res)).includes("logistica") && tabla != "vulc_consulta" || (acceso(req,res)).includes("produccion") && tabla == "vulc_consulta"
     || (acceso(req,res)).includes("empleados") && tabla == "empleados") {
         funcion.Delete(base, tabla, id, (err, result) => {
+            res.render('eliminado.ejs', {
+                id,
+                origen
+            });
+        });
+    } else {
+        res.render("acceso_denegado.ejs")
+    }
+}
+
+controller.eliminar_extrusion_POST = (req, res) => {
+
+    ids = (req.body.id).split(",");
+    id = ids[0];
+    base = ids[1];
+    tabla = ids[2];
+    let origen =req.body.origen[0]
+
+    if ((acceso(req,res)).includes("logistica") && tabla != "vulc_consulta" || (acceso(req,res)).includes("produccion") && tabla == "vulc_consulta"
+    || (acceso(req,res)).includes("empleados") && tabla == "empleados") {
+        funcion.Delete_6(base, tabla, id, (err, result) => {
             res.render('eliminado.ejs', {
                 id,
                 origen
@@ -326,7 +393,7 @@ controller.agregar_extrusion_POST = (req, res) => {
             tabla = "vulc";
         }
 
-        funcion.Discover_Search(base, tabla, (err, formato) => {
+        funcion.Discover_Search_6(base, tabla, (err, formato) => {
             formato = Object.assign({}, formato);
             res.render("insertar_extrusion.ejs", {
                 formato,
@@ -529,7 +596,7 @@ controller.insertar_excel_extrusion_POST = (req, res) => {
     let count = 0;
     const wb = new Excel.Workbook();
 
-    funcion.Discover_Search(base, tabla, (err, formato) => {
+    funcion.Discover_Search_6(base, tabla, (err, formato) => {
 
         wb.xlsx.load(req.file.buffer)
             .then(() => {
@@ -601,7 +668,7 @@ controller.insertar_excel_extrusion_POST = (req, res) => {
                                     id:[base,tabla]
                                 });
                             }else{
-                                funcion.Insert_excel(base, tabla, titulos, valores, (err, result) => { })
+                                funcion.Insert_excel_6(base, tabla, titulos, valores, (err, result) => { })
                                 res.render('guardado_excel.ejs', {
                                     arreglo,
                                     estado: "OK",

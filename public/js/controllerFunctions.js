@@ -2,7 +2,7 @@ const funcion = {};
 
 const db = require('../db/conn_b10');
 const db_b = require('../db/conn_bartender');
-
+const db_b_6 = require('../db/conn_bartender_6');
 
 
 funcion.Search_etiquetas_semi = (callback) => {
@@ -36,6 +36,18 @@ funcion.Search_Tabla = (base, tabla, callback) => {
     }
 }
 
+funcion.Search_Tabla_6 = (base, tabla, callback) => {
+
+    db_b_6.query(`SELECT * FROM ${tabla} WHERE 1`, function (err, result, fields) {
+        if (err) {
+            callback(err, null);
+        } else {
+            callback(null, result);
+        }
+    })
+}
+
+
 
 funcion.Search = (base, tabla, id, callback) => {
     if (base == "b10") {
@@ -55,6 +67,17 @@ funcion.Search = (base, tabla, id, callback) => {
             }
         })
     }
+}
+
+funcion.Search_6 = (base, tabla, id, callback) => {
+
+    db_b_6.query(`SELECT * FROM ${tabla} WHERE id = ${id}`, function (err, result, fields) {
+        if (err) {
+            callback(err, null);
+        } else {
+            callback(null, result);
+        }
+    })
 }
 
 funcion.Discover_Search = (base, tabla, callback) => {
@@ -81,6 +104,29 @@ funcion.Discover_Search = (base, tabla, callback) => {
 
 }
 
+funcion.Discover_Search_6 = (base, tabla, callback) => {
+
+    db_b_6.query(`SHOW COLUMNS FROM ${tabla} `, function (err, result, fields) {
+        if (err) {
+            callback(err, null);
+        } else {
+            callback(null, result);
+        }
+    })
+}
+
+funcion.Discover_Search_6 = (base, tabla, callback) => {
+
+    db_b_6.query(`SHOW COLUMNS FROM ${tabla} `, function (err, result, fields) {
+        if (err) {
+            callback(err, null);
+        } else {
+            callback(null, result);
+        }
+    })
+
+}
+
 
 funcion.Update = (base, tabla, arreglo, id, callback) => {
 
@@ -104,6 +150,19 @@ funcion.Update = (base, tabla, arreglo, id, callback) => {
 
 }
 
+funcion.Update_6 = (base, tabla, arreglo, id, callback) => {
+
+        db_b_6.query(`UPDATE ${tabla} SET ${arreglo} WHERE id = ${id}`, function (err, result, fields) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, result);
+            }
+        })
+    
+
+}
+
 funcion.Delete = (base, tabla, id, callback) => {
 
     if (base == "b10") {
@@ -124,6 +183,18 @@ funcion.Delete = (base, tabla, id, callback) => {
         })
     }
 
+}
+
+funcion.Delete_6 = (base, tabla, id, callback) => {
+
+
+        db_b_6.query(`DELETE FROM ${tabla} WHERE id = ${id}`, function (err, result, fields) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, result);
+            }
+        })
 }
 
 funcion.Search_Tables = (base, callback) => {
@@ -222,7 +293,7 @@ funcion.Insert_excel = (base, tabla, titulos, valores, callback) => {
             }
             valores_finales.push(valor)
             duplicate.push(`${titulos[y]}=${valor}`)
-        }  
+        }
         if (base == "b10") {
             db.query(`INSERT INTO ${tabla} (${titulos.join()}) VALUES (${valores_finales}) ON DUPLICATE KEY UPDATE ${duplicate}  `, function (err, result, fields) {
                 if (err) {
@@ -241,6 +312,41 @@ funcion.Insert_excel = (base, tabla, titulos, valores, callback) => {
             })
         }
     }
+}
+
+funcion.Insert_excel_6 = (base, tabla, titulos, valores, callback) => {
+
+    let valor
+    let = valores_finales = []
+    let duplicate = []
+
+    for (let i = 0; i < valores.length; i++) {
+        valores_finales = []
+        duplicate = []
+        for (let y = 0; y < titulos.length; y++) {
+
+            if (typeof (valores[i][y]) === "string") {
+                valor = `"${valores[i][y]}"`
+            } else if (typeof (valores[i][y])) {
+                valor = valores[i][y]
+            } else if (valores[i][y] === undefined) {
+                valor = " "
+            } else {
+                valor = valores[i][y]
+            }
+            valores_finales.push(valor)
+            duplicate.push(`${titulos[y]}=${valor}`)
+        }
+
+        db_b.query(`INSERT INTO ${tabla} (${titulos.join()}) VALUES (${valores_finales}) ON DUPLICATE KEY UPDATE ${duplicate}  `, function (err, result, fields) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, result);
+            }
+        })
+    }
+
 }
 
 module.exports = funcion;

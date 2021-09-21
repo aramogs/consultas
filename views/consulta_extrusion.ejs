@@ -85,7 +85,7 @@ form.appendChild(el);
             firstCol.innerHTML = `<input type="text" name="origen" value=${origen} hidden> <p hidden>${etiquetas_semi[i][col[0]]}</p><button type="submit" formaction="/actualizar_extrusion" class="btn btn-info  rounded-pill"
                                         name="id" value="${etiquetas_semi[i][col[0]]},<%=base%>,<%=tabla%>"><span
                                             class="fas fa-pencil-alt">
-                                            <button type="submit" formaction="/eliminar"
+                                            <button type="submit" formaction="/eliminar_extrusion"
                                                 class="btn btn-danger  rounded-pill" name="id"
                                                 value="${etiquetas_semi[i][col[0]]},<%=base%>,<%=tabla%>"
                                                 onclick="return confirm('ELIMINAR ID ${etiquetas_semi[i][col[0]]} ?')"><span
