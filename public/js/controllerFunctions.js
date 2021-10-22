@@ -207,6 +207,16 @@ funcion.Search_Tables = (base, callback) => {
     })
 }
 
+funcion.Search_Tables_6 = (base, callback) => {
+    db_b_6.query(`SELECT table_name FROM information_schema.tables WHERE table_schema = '${base}'`, function (err, result, fields) {
+        if (err) {
+            callback(err, null);
+        } else {
+            callback(null, result);
+        }
+    })
+}
+
 funcion.Search_SAP_Union = (tables, base, search_field, callback) => {
 
     let search = []
@@ -247,6 +257,45 @@ funcion.Search_SAP_Union = (tables, base, search_field, callback) => {
     }
 }
 
+funcion.Search_SAP_Union_6 = (tables, base, search_field, callback) => {
+
+    let search = []
+    for (let i = 0; i < tables.length; i++) {
+
+        search.push(`${search_field} FROM ${base}.${tables[i].table_name} UNION SELECT`)
+        if (i == tables.length - 1) {
+
+            search.push(`${search_field} FROM ${base}.${tables[i].table_name}`)
+        }
+
+    }
+
+    if (base == "b10" && search_field == "no_sap") {
+        db.query_6(`SELECT ${search_field} FROM b10sap   `, function (err, result, fields) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, result);
+            }
+        })
+    } else if (base == "b10" && search_field == "emp_tag") {
+        db.query_6(`SELECT ${search_field} FROM empleados   `, function (err, result, fields) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, result);
+            }
+        })
+    } else {
+        db_b.query(`SELECT ${search.join(" ")}   `, function (err, result, fields) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, result);
+            }
+        })
+    }
+}
 
 funcion.Insert = (base, tabla, titulos, valores, callback) => {
 
@@ -268,6 +317,17 @@ funcion.Insert = (base, tabla, titulos, valores, callback) => {
         })
     }
 
+}
+
+funcion.Insert_6 = (base, tabla, titulos, valores, callback) => {
+
+        db_b_6.query(`INSERT INTO ${tabla} (${titulos}) VALUES (${valores}) `, function (err, result, fields) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, result);
+            }
+       })
 }
 
 

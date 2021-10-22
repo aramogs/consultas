@@ -425,6 +425,25 @@ controller.consulta_valor_unico_GET = (req, res) => {
     });
 };
 
+controller.consulta_valor_unico_6_GET = (req, res) => {
+
+
+    if (req.url.split("/")[1] == "consulta_sap_duplicado_6") {
+        search_field = "no_sap"
+    } else if (req.url.split("/")[1] == "consulta_emp_duplicado_6") {
+        search_field = "emp_tag"
+    }
+
+
+    base = req.params.id;
+    funcion.Search_Tables_6(base, (err, tables) => {
+
+        funcion.Search_SAP_Union_6(tables, base, search_field, (err, valoresUnicos) => {
+            res.send(valoresUnicos);
+        });
+    });
+};
+
 controller.insertar_POST = (req, res) => {
     obj = req.body;
     base = req.body.base;
@@ -470,6 +489,50 @@ controller.insertar_POST = (req, res) => {
     });
 };
 
+controller.insertar_extrusion_POST = (req, res) => {
+    obj = req.body;
+    base = req.body.base;
+    tabla = req.body.tabla;
+    origen = req.body.origen
+    arreglo = [];
+    titulos = [];
+    valores = [];
+
+
+    funcion.Discover_Search_6(base, tabla, (err, formato) => {
+
+        let info = Object.entries(obj);
+        for (let i = 1; i < formato.length; i++) {
+            for (let y = 0; y < info.length; y++) {
+                if (formato[i].Field == info[y][0]) {
+                    if ((formato[i].Type).substring(0, 3) == "int") {
+                        arreglo.push(`${info[y][0]}=${info[y][1]}`);
+                        titulos.push(`\`${info[y][0]}\``);
+                        valores.push(`${info[y][1]}`);
+
+                    } else if ((formato[i].Type).substring(0, 7) == "varchar") {
+                        arreglo.push(`${info[y][0]}="${info[y][1]}"`);
+                        titulos.push(`\`${info[y][0]}\``);
+                        valores.push(`"${info[y][1]}"`);
+                    }
+                }
+            }
+        }
+
+        titulosFinales = titulos.join();
+        valoresFinales = valores.join();
+        funcion.Insert_6(base, tabla, titulosFinales, valoresFinales, (err, result) => {
+            id = result.insertId;
+
+            res.render('guardado.ejs', {
+                arreglo,
+                id,
+                estado: "insert",
+                origen
+            });
+        });
+    });
+};
 
 controller.insertar_excel_POST = (req, res) => {
 
