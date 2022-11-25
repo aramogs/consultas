@@ -63,6 +63,20 @@ controller.consulta_vulcanizado_GET = (req, res) => {
     });
 };
 
+controller.consulta_subEnsamble_GET = (req, res) => {
+    base = "b10_bartender";
+    tabla = "sem";
+    funcion.Search_Tabla(base, tabla, (err, etiquetas_info) => {
+        if (err) console.error(err);
+        res.render('consulta_base.ejs', {
+            etiquetas_info,
+            base,
+            tabla
+        });
+
+    });
+};
+
 controller.consulta_extrusion_GET = (req, res) => {
     base = "b10_bartender";
     tabla = "extr";

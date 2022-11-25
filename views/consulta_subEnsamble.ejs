@@ -1,0 +1,27 @@
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Emp_Num</th>
+            <th>SAP</th>
+            <th>Movimiento</th>
+            <th>No_Serie</th>
+            <th>Fecha_Movimiento</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        <% for (let i = 0; i < base.length; i++) { %>
+            <tr>
+                <td><%= base[i].id %></td>
+                <td><%= base[i].emp_num %></td>
+                <td><%= base[i].np %></td>
+                <td><%= base[i].movimiento %></td>
+                <td><%= base[i].no_serie %></td>
+                <td><%= base[i].fecha_movimiento %></td>
+            </tr>
+            <% } %>
+
+    </tbody>
+</table>
