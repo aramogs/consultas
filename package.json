@@ -32,7 +32,7 @@
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.14.0",
     "cz-conventional-changelog": "^3.2.0",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.20"
   },
   "config": {
     "commitizen": {
