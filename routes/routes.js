@@ -33,6 +33,7 @@ router.post('/insertar_extrusion', routesController.insertar_extrusion_POST);
 router.post('/insertar_excel',  upload.single("excelFile"), routesController.insertar_excel_POST);
 router.post('/insertar_excel_extrusion',  upload.single("excelFile"), routesController.insertar_excel_extrusion_POST);
 router.get('/consulta_vulca',routesController.consulta_vulca_GET);
+router.get('/consulta_mp',routesController.consulta_mp_GET);
 router.get('*', (req, res) => {
   res.redirect('http://tftdelsrv001:3000/not_found');
 });

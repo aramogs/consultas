@@ -776,4 +776,18 @@ controller.consulta_vulca_GET = (req, res) => {
     })
 }
 
+controller.consulta_mp_GET = (req, res) => {
+    base = "b10_bartender";
+    tabla = "mp";
+    funcion.Search_Tabla(base, tabla, (err, etiquetas_info) => {
+        if (err) console.error(err);
+        res.render('consulta_base.ejs', {
+            etiquetas_info,
+            base,
+            tabla
+        });
+
+    });
+};
+
 module.exports = controller;
