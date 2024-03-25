@@ -105,6 +105,62 @@ controller.consulta_BMW_GET = (req, res) => {
     });
 };
 
+controller.consulta_BMWG0X_GET = (req, res) => {
+    base = "b10_bartender";
+    tabla = "bmwg0x";
+    funcion.Search_Tabla(base, tabla, (err, etiquetas_info) => {
+        if (err) console.error(err);
+        res.render('consulta_base.ejs', {
+            etiquetas_info,
+            base,
+            tabla
+        });
+
+    });
+};
+
+controller.consulta_BMWG2X_GET = (req, res) => {
+    base = "b10_bartender";
+    tabla = "bmwg2x";
+    funcion.Search_Tabla(base, tabla, (err, etiquetas_info) => {
+        if (err) console.error(err);
+        res.render('consulta_base.ejs', {
+            etiquetas_info,
+            base,
+            tabla
+        });
+
+    });
+};
+
+controller.consulta_BMWSERVICIOS_GET = (req, res) => {
+    base = "b10_bartender";
+    tabla = "bmwservicios";
+    funcion.Search_Tabla(base, tabla, (err, etiquetas_info) => {
+        if (err) console.error(err);
+        res.render('consulta_base.ejs', {
+            etiquetas_info,
+            base,
+            tabla
+        });
+
+    });
+};
+
+controller.consulta_lucid_GET = (req, res) => {
+    base = "b10_bartender";
+    tabla = "lucid";
+    funcion.Search_Tabla(base, tabla, (err, etiquetas_info) => {
+        if (err) console.error(err);
+        res.render('consulta_base.ejs', {
+            etiquetas_info,
+            base,
+            tabla
+        });
+
+    });
+};
+
 
 controller.consulta_empleados_GET = (req, res) => {
     base = "b10";

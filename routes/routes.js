@@ -9,6 +9,10 @@ const upload = multer()
 router.get('/', routesController.index_GET);
 router.get('/consulta_rackestampado', routesController.consulta_rackestampado_GET);
 router.get('/consulta_bmw', routesController.consulta_BMW_GET);
+router.get('/consulta_bmwg0x', routesController.consulta_BMWG0X_GET);
+router.get('/consulta_bmwg2x', routesController.consulta_BMWG2X_GET);
+router.get('/consulta_bmwservicios', routesController.consulta_BMWSERVICIOS_GET);
+router.get('/consulta_lucid', routesController.consulta_lucid_GET);
 router.get('/consulta_empleados', routesController.consulta_empleados_GET);
 router.get('/consulta_ford', routesController.consulta_ford_GET);
 router.get('/consulta_gm', routesController.consulta_gm_GET);
