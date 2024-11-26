@@ -202,6 +202,19 @@ controller.consulta_gm_GET = (req, res) => {
     });
 };
 
+controller.consulta_gmservicios_GET = (req, res) => {
+    base = "b10_bartender";
+    tabla = "gmservicios";
+    funcion.Search_Tabla(base, tabla, (err, etiquetas_info) => {
+        if (err) console.error(err);
+        res.render('consulta_base.ejs', {
+            etiquetas_info,
+            base,
+            tabla
+        });
+    });
+};
+
 controller.consulta_vwmexico_GET = (req, res) => {
     base = "b10_bartender";
     tabla = "vwmexico";
