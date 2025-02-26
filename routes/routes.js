@@ -16,6 +16,7 @@ router.get('/consulta_lucid', routesController.consulta_lucid_GET);
 router.get('/consulta_empleados', routesController.consulta_empleados_GET);
 router.get('/consulta_ford', routesController.consulta_ford_GET);
 router.get('/consulta_gm', routesController.consulta_gm_GET);
+router.get('/consulta_zf', routesController.consulta_zf_GET);
 router.get('/consulta_gmservicios', routesController.consulta_gmservicios_GET);
 router.get('/consulta_vwmexico', routesController.consulta_vwmexico_GET);
 router.get('/consulta_navistar', routesController.consulta_navistar_GET);
