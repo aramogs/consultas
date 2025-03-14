@@ -18,6 +18,7 @@ router.get('/consulta_ford', routesController.consulta_ford_GET);
 router.get('/consulta_gm', routesController.consulta_gm_GET);
 router.get('/consulta_gmservicios', routesController.consulta_gmservicios_GET);
 router.get('/consulta_vwmexico', routesController.consulta_vwmexico_GET);
+router.get('/consulta_vwamerica', routesController.consulta_vwamerica_GET);
 router.get('/consulta_navistar', routesController.consulta_navistar_GET);
 router.get('/consulta_vulcanizado', routesController.consulta_vulcanizado_GET);
 router.get('/consulta_subEnsamble', routesController.consulta_subEnsamble_GET);

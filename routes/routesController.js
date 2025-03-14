@@ -228,6 +228,19 @@ controller.consulta_vwmexico_GET = (req, res) => {
     });
 };
 
+controller.consulta_vwamerica_GET = (req, res) => {
+    base = "b10_bartender";
+    tabla = "vwamerica";   
+    funcion.Search_Tabla(base, tabla, (err, etiquetas_info) => {
+        if (err) console.error(err);
+        res.render('consulta_base.ejs', {
+            etiquetas_info,
+            base,
+            tabla
+        });
+    });
+};
+
 controller.consulta_navistar_GET = (req, res) => {
     base = "b10_bartender";
     tabla = "navistar";
