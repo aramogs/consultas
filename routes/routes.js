@@ -16,6 +16,7 @@ router.get('/consulta_lucid', routesController.consulta_lucid_GET);
 router.get('/consulta_empleados', routesController.consulta_empleados_GET);
 router.get('/consulta_ford', routesController.consulta_ford_GET);
 router.get('/consulta_gm', routesController.consulta_gm_GET);
+router.get('/consulta_zf', routesController.consulta_zf_GET);
 router.get('/consulta_gmservicios', routesController.consulta_gmservicios_GET);
 router.get('/consulta_vwmexico', routesController.consulta_vwmexico_GET);
 router.get('/consulta_vwamerica', routesController.consulta_vwamerica_GET);
@@ -40,6 +41,7 @@ router.post('/insertar_excel',  upload.single("excelFile"), routesController.ins
 router.post('/insertar_excel_extrusion',  upload.single("excelFile"), routesController.insertar_excel_extrusion_POST);
 router.get('/consulta_vulca',routesController.consulta_vulca_GET);
 router.get('/consulta_mp',routesController.consulta_mp_GET);
+router.get('/consulta_chrysler', routesController.consulta_CHRYSLER_GET);
 router.get('*', (req, res) => {
   res.redirect('http://tftdelsrv001:3000/not_found');
 });
